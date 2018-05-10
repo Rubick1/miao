@@ -1,0 +1,54 @@
+header{
+  background-color:black;
+  minwidth:500px;
+}
+header p{
+  color:white;
+  width:600px;
+  margin-left:auto;
+}
+body{
+  width:600px;
+  margin-left:auto;
+  margin-right:auto;
+}
+div p{
+  box-sizing:border-box;
+  height:40px;
+  width:180px;
+  border:3px solid;
+  background-color:pink;
+  line-height:30px;
+  margin-top:15px;
+  margin-bottom:15px;
+   
+}
+
+div p:nth-child(n+5){ 
+  margin-left:210px;
+}
+div p:nth-child(n+9){
+  margin-left:420px;
+}
+div p:nth-child(4n+5){
+  margin-top:-220px;
+}
+div p:hover{
+  background-color: red;
+}
+ul{
+  overflow:hidden;
+}
+li{
+  list-style:none; 
+  border-bottom: 1px dotted;
+  margin-bottom: -1px;
+ 
+  margin-left:-40px;
+}
+
+footer p{
+  background-color:magenta;
+  text-align:center;
+  
+}
