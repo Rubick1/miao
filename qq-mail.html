@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      div:first-child{
+        border:2px solid;
+        height:100vw;
+        width:100vw;
+        box-sizing:border-box;
+      }
+      div:nth-child(2){
+        border:2px solid;
+        width:220px;
+        margin-top:calc(100px - 100vw);
+        height:calc(100vw - 100px);
+        box-sizing:border-box;
+      } 
+      div:nth-child(3){
+        box-sizing:border-box;
+        border:2px solid; 
+        border-left:0;
+        margin-left:220px;
+        margin-top: calc(100px - 100vw);
+        width:calc(100vw - 220px);
+        height:calc(100vw - 100px);
+      } 
+    </style>
+  </head>
+  <body>
+    <div></div>
+    <div></div>
+    <div></div>
+    
+  </body>
+</html>
