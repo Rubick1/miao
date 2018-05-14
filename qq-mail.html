@@ -4,15 +4,15 @@
     <style>
       div:first-child{
         border:2px solid;
-        height:100vw;
+        height:100vh;
         width:100vw;
         box-sizing:border-box;
       }
       div:nth-child(2){
         border:2px solid;
         width:220px;
-        margin-top:calc(100px - 100vw);
-        height:calc(100vw - 100px);
+        margin-top:calc(100px - 100vh);
+        height:calc(100vh - 100px);
         box-sizing:border-box;
       } 
       div:nth-child(3){
@@ -20,9 +20,13 @@
         border:2px solid; 
         border-left:0;
         margin-left:220px;
-        margin-top: calc(100px - 100vw);
+        margin-top: calc(100px - 100vh);
         width:calc(100vw - 220px);
-        height:calc(100vw - 100px);
+        height:calc(100vh - 100px);
+
+      }
+      body{
+        margin:0px;
       } 
     </style>
   </head>
