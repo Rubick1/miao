@@ -1,13 +1,15 @@
 header{
   background-color:black;
-  minwidth:500px;
+  width:100%;
+  margin:0;
 }
 header p{
   color:white;
   width:600px;
-  margin-left:auto;
+  margin-left:calc(50% - 300px);
+  margin-top:0;
 }
-body{
+main{
   width:600px;
   margin-left:auto;
   margin-right:auto;
@@ -50,5 +52,6 @@ li{
 footer p{
   background-color:magenta;
   text-align:center;
+  margin:0;
   
 }

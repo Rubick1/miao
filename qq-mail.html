@@ -2,27 +2,35 @@
   <head>
     <meta charset="utf-8">
     <style>
-      body{
-          margin:0;
+      * {
+        background-color: rgba(0,0,0,0.1);
+      }
+      html,body{
+        padding:0;
+        margin:0;
       }
       header{
         height:100px;
-        background-color: pink;
         border-bottom:2px solid;
-        box-sizing:border-box;
-      }
-      aside{
-        height:calc(100vh - 100px);
-        background-color: purple;
-        width:220px;
-        box-sizing:border-box;
-        border-right:2px solid;
+        background-color:red;
       }
       main{
-        margin-left:220px;
         height:calc(100vh - 100px);
-        margin-top:calc(100px - 100vh);
-        background-color: aqua;
+
+      }
+      .aside{
+        display:inline-block;
+        box-sizing:border-box;
+        border-right:2px solid;
+        width:200px;
+        height:calc(100vh - 100px);
+        background-color: green;
+      }
+      .main{
+        display:inline-block;
+        height:calc(100vh - 100px);
+        width:calc(100vw - 200px);
+        background-color: blue;
       }
     </style>
   </head>
@@ -30,11 +38,8 @@
     <header>
      header
     </header>
-    <aside>
-      aside
-    </aside>
     <main>
-      main
+      <span class="aside">aside</span><span class="main">main</span>
     </main>
     
   </body>
