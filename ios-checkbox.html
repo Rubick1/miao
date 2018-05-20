@@ -1,0 +1,875 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <!-- <meta http-equiv="refresh" content="5" /> -->
+  <title>JS Bin</title>
+  <style>
+    html{
+      box-sizing: border-box;
+    }
+    * {
+      box-sizing: inherit;
+    }
+    /*这部分是菜单css*/
+    div{
+    position:relative;    
+    width:80px;
+    }
+    .firstspan{
+      display:inline-block;
+    }
+    .first{
+      position:absolute;
+      bottom:260px;
+    }
+    .second,.third{
+      position:absolute;
+      left:80px;
+      bottom:260px;
+    }
+
+    .firstspan:hover .first{
+      top:20px;
+    }
+    .secondspan:hover .second,.thirdspan:hover .third{
+      top:0px;
+    }
+    .forthspan:hover,.secondspan:hover,.thirdspan:hover{
+      background-color: orange;
+    }
+    
+    /*这部分是苹果图标css*/
+    input{
+      display:none;
+    }
+    
+    .out{
+      height:200px;
+      width:400px;
+      border:transparent;
+      border-radius:999px;
+      margin-right: 0px;
+      margin-top:200px;
+      padding:1px;      
+      background-color: #f3f3f3;
+      position: relative;
+    }
+    .button{
+      display:block;
+      width:195px;
+      height:196px;
+      border:transparent;
+      border-radius:999px;
+      background-color: #fff;
+      transition:margin-left .5s cubic-bezier(.98,1.39,.98,.92);
+      margin-right: 0;
+    }
+
+    .button:active{
+      width:270px;
+      transition:width .3s;
+    }
+
+
+    
+    input:checked + header {
+      background-color: #72da66;
+    }
+
+    input:checked + header .button{
+      margin-left:200px;
+      
+    } 
+    input:checked + header .button:active{
+      margin-left:auto;
+      margin-right:0;
+    }
+
+    /*下面是点赞css*/
+    .zan {
+      display:block;
+      background-image: url(https://abs.twimg.com/a/1526339738/img/animations/web_heart_animation_edge.png);
+      background-repeat: no-repeat;
+      height:105px;
+      width:105px;  
+    }
+    input:checked + .zan{
+      background-position:-2800px;
+      transition:background-position 1s steps(28);
+    }
+    
+
+  </style>
+</head>
+<body>
+  <!-- 这部分是菜单栏 html-->
+  <div class="firstspan">
+  菜单一
+    <div class=first>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>                 
+          </div>
+
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="firstspan">
+  菜单二
+    <div class=first>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>                 
+          </div>
+
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="firstspan">
+  菜单三
+    <div class=first>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>                 
+          </div>
+
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="firstspan">
+  菜单四
+    <div class=first>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>                 
+          </div>
+
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+      <div class="secondspan" >
+        第二
+        <div class="second">
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+          
+          <div class="thirdspan">第三
+            <div class="third">
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+              <div class="forthspan"> 第四 </div>
+            </div>      
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+  <!-- 苹果图标html -->
+  <input type="checkbox" id="button">
+  <header class="out">
+    <label class="button" for="button">     
+    </label>    
+  </header>
+
+  <!-- 点赞html -->
+  <input type="checkbox" id="zanradio">
+  <label for="zanradio" class="zan"></label>
+
+  
+  
+
+    
+
+  </div>
+</div>
+
+</body>
+</html>
