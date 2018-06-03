@@ -1,0 +1,9 @@
+html{
+  box-sizing: border-box;
+}
+* {
+  box-sizing: inherit;
+}
+img{
+  box-sizing: content-box;
+}
