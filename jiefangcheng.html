@@ -11,7 +11,7 @@
     var b = prompt("请输入一元二次方程的第二个参数")
     var c = prompt("请输入一元二次方程的第三个参数")
     var delta = b * b - 4 * a * c
-    var s_delta=Math.sqrt(delta)
+    var s_delta = Math.sqrt(delta)
     if (delta > 0){
       var x1 =(-b +s_delta)/(2 * a)
       var x2 =(-b -s_delta)/(2 * a)
@@ -19,7 +19,7 @@
       console.log(x1)
       console.log(x2)
     }
-    else if (delta = 0){
+    else if (delta === 0){
       var x=(-b) / (2 * a)
       console.log("一个解")
       console.log(x)
