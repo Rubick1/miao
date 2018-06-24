@@ -18,16 +18,16 @@
       console.log("两个解")
       console.log(x1)
       console.log(x2)
-    }
-    else if (delta === 0){
+    }else if (delta === 0){
       var x=(-b) / (2 * a)
       console.log("一个解")
       console.log(x)
-    }
-    else{
+    }else{
       console.log("兄die，这个是复数了，换一个吧")
     }
   </script>
+
+  
   <script>
     var a = prompt("请输入二元一次方程的第一个参数")
     var b = prompt("请输入二元一次方程的第二个参数")
@@ -37,12 +37,9 @@
     var f = prompt("请输入二元一次方程的第六个参数")
     if (a * e === b * d && a * f === c * d){
       console.log("有无数个解")
-    }
-    else if (a * e === b * d ){
+    }else if (a * e === b * d ){
       console.log("无解")
-    }
-    else{
-
+    }else{
       var x1 = (a * f - c * d) / ( a * e - b * d)
       var x2 = (c * e - b * f) / ( a * e - b * d)
       console.log("有两个解")

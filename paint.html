@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>画图</title>
+  <style>
+    canvas {
+      border: 2px solid #f0f;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas width="400" height="300"></canvas>
+</body>
+<script>
+  var cvs = document.querySelector('canvas')
+  var ctx = cvs.getContext('2d')
+
+  function dot(x, y, color = 'black') {
+    ctx.fillStyle = color
+    ctx.fillRect(x, y, 1, 1)
+  }
+  
+</script>
+
+<script >
+  // YOUR CODE GOES HERE
+  //实线
+  for (x = 0;x <= 400;x++){
+    dot(x, 10)
+  }
+  //虚线一个实点一个空点
+  for (x = 0;x <= 400;x = x + 2){
+    dot(x, 20)
+  }
+  //两个实点两个空点的虚线
+  for (x = 0;x <= 400;x = x + 4){
+    dot(x, 30)
+    dot(x + 1, 30)
+  }
+  //三个实点两个空点
+  for (x = 0;x <= 400;x = x + 5){
+    dot(x, 40)
+    dot(x + 1, 40)
+    dot(x + 2, 40)
+  }
+  //45度的斜线
+  for (x = 0;x <= 300;x++){
+    dot(x, x)
+  }
+  //画一条跨越画布左上角和右下角的对角线
+  for (x = 0;x <= 400;x++){
+    dot(x, 3 * x / 4)
+  }
+  //画一个正方形
+  for (let x = 150;x <= 200;x++){
+    for (let y = 150;y <= 200;y++){
+      dot(x, y,"rgb(255,182,193)")
+    }
+  }
+  //画一个色块
+  var green = 255
+  var blue = 0
+  for (let x = 200;x <= 250;x++){
+    blue += 5
+    for (let y = 200;y <= 250;y++){
+      green -= 5
+      dot(x, y,"rgb(255,"+green+","+blue+")")
+    }
+    green = 255
+  }
+
+  //画一个空心圆
+  var seta 
+  var x 
+  var y 
+  for (seta =0;seta <= 2 * Math.PI;seta=seta+0.0001){
+    x = 40 * Math.cos(seta) + 100
+    y = 40 * Math.sin(seta) + 100
+    dot (x, y)
+  }
+</script>
+
+<script >
+  
+</script>
+</html>
