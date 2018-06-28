@@ -397,7 +397,7 @@
   console.log (m)
 </script>
 
-<script id="ch0105/16" >
+<script id="ch0105/16" type="xxx">
   
   var n =  Number(prompt("请输入年薪"))
   var k =  Number(prompt("请输入涨价幅度")) 
@@ -470,6 +470,469 @@
   }
   console.log(sum)
   console.log(h / 2)
+</script>
+
+<script id="ch0105/21" type="xxx">
+  var number = Number(prompt("请输入数字"))
+  var next_number 
+  while (number !== 1){
+    if (number % 2 === 1){
+      next_Number = number * 3 + 1
+      console.log (number + "*3+1=" + next_Number)
+      number = next_Number
+    }else {
+      next_Number = number / 2
+      console.log (number + "/2=" + next_Number)
+      number = next_Number
+    }
+  }
+  console.log ("End")
+</script>
+
+<script id="ch0105/22" type="xxx">
+  //注意我这里的写法当某个月的预算超出时，不能输入下一个月的预算
+  var left_Money = 0
+  var aim_Money
+  var month_Money
+  var month_Save_Money
+  var sum = 0
+  var month
+  for (i = 0;i < 12;i++) {
+    month = i + 1
+    aim_Money = Number(prompt("请输入第" + month + "月的预算"))
+    console.log (aim_Money)
+    month_Money = left_Money + 300
+    if (month_Money < aim_Money) {
+      console.log ("-" + month)
+      break
+    }
+    if ((month_Money - aim_Money) >= 100) {
+      month_Save_Money = parseInt((month_Money - aim_Money) / 100) * 100
+      sum += month_Save_Money
+      left_Money = month_Money - aim_Money - month_Save_Money
+    }else {
+      left_Money = month_Money - aim_Money
+    }
+    if (i === 11) {
+      sum = sum * 1.2 + left_Money
+      console.log(sum)
+    }
+  }
+</script>
+
+<script id="ch0105/23" type="xxx">
+  var m = Number(prompt("请输入药品总量m"))
+  var n = Number(prompt("请输入人数n"))
+  var left = m
+  var number = 0
+  for (i = 0;i < n;i++) {
+    var need = Number(prompt("请输入需要的数量"))
+    if (need > left){
+      number++
+    } else {
+      left -= need
+    }
+  }
+  console.log (number)
+</script>
+
+<script id="ch0105/24" type="xxx">
+  var n = Number(prompt("请输入测量次数n"))
+  var hour = 0
+  var max = 0
+  for (i = 0;i < n ;i++){
+    var pressure1 = Number(prompt("请输入收缩压"))
+    var pressure2 = Number(prompt("请输入舒张压"))
+    if (pressure1 >= 90 && pressure1 <= 140 && pressure2 >= 60 && pressure2 <= 90){
+      hour ++
+      max = Math.max (hour, max)
+    } else {
+      hour = 0
+    }
+  }
+  console.log (max)
+</script>
+
+<script id="ch0105/25" type="xxx">
+  for (i = 1;i < 728 ;i++) {
+    var parse71 = parseInt (i / 7)
+    var parse91 = parseInt (i / 9)
+    var parse72 = parseInt (i / 49)
+    var parse92 = parseInt (i / 81)
+    var seven = ""
+    var nine = ""
+    if (i % 7 === parse92 && i % 9 === parse72 && parse71 % 7 === parse91 % 9) {
+      seven = seven + parse72 + (parse71 % 7) + parse92
+      seven = Number (seven)
+      nine = nine + parse92 + (parse71 % 7) + parse72
+      nine = Number (nine)
+      console.log (i)
+      console.log (seven)
+      console.log (nine)
+    }
+  }
+    
+</script>
+
+<script id="ch0105/26" type="xxx">
+  var n = Number(prompt("请输入数字的个数"))
+  var sum , correct = 0, digit
+  for (i = 0;i< n;i++) {
+    sum = 0 
+    var number = Number(prompt("请输入数字"))
+    for (j = 0;j< 4;j++) {
+      digit = number % 10
+      number = (number - digit) / 10
+      if (j === 0) {
+        sum += digit
+      } else {
+        sum -= digit
+      }
+    }
+    if (sum > 0) {
+      correct++
+    }
+  }
+  console.log (correct)
+</script>
+
+<script id="ch0105/27" type="xxx">
+  var number = Number(prompt("请输入整数"))
+  var sum = 0
+  for (i = 1;;i++){
+    sum += 1 / i
+    if (sum > number) {
+      console.log (i)
+      break
+    }
+  }
+</script>
+
+<script id="ch0105/28" type="xxx">
+  var number = Number(prompt("请输入整数"))
+  var char = ""
+  var digit
+  do {
+    digit = number % 10
+    char += digit + " "
+    number = (number - digit) / 10
+  } while (number > 0)
+  console.log (char)
+</script>
+
+<script id="ch0105/29" type="xxx">
+  var number = Number(prompt("请输入整数"))
+  var char = ""
+  var absNumber = Math.abs(number)
+  var notZero = false
+  
+  while (absNumber > 0) {
+    digit = absNumber % 10
+    absNumber = (absNumber - digit) / 10
+    if (digit !== 0) {
+      notZero = true
+    }
+    if (notZero) {
+      char += digit
+    }
+  } 
+
+  reverseNumber = Number(char)
+
+  if (number > 0) {
+    console.log (reverseNumber)
+  } else if (number === 0) {
+    console.log (0)
+  } else {
+    reverseNumber = -reverseNumber
+    console.log (reverseNumber)
+  }
+  
+</script>
+
+<script  id="ch0105/30" type="xxx">
+  var number = Number(prompt("请输入整数m"))
+  var k = Number(prompt("请输入k"))
+  var sum = 0
+  var digit 
+  while (number > 0) {
+    digit = number % 10
+    number = (number - digit) / 10
+    if (digit === 3) {
+      sum++
+    }
+  }
+  if (number % 19 === 0 && sum === k) {
+    console.log ("YES")
+  } else {
+    console.log ("NO")
+  }
+</script>
+
+<script id="ch0105/31" type="xxx">
+  var n = Number(prompt("请输入灯泡的数量n"))
+  var m = Number(prompt("请输入人的数量m"))
+  var char = ""
+  var light  
+
+  for (i = 1;i <= n;i++) {
+    light = 1
+    for (j = 1;j <= m;j++){
+      if (i % j === 0) {
+        light = - light
+      }
+    }
+    if (light === -1) {
+      char += i + ","
+    }
+  }
+
+  console.log (char)
+</script>
+
+<script id="ch0105/32" type="xxx">
+  var n = Number(prompt("请输入项数n"))
+  var p = 1
+  var q = 2
+  var sum = 0
+  for (i = 0 ;i < n;i++) {
+    sum += q / p
+    q = p + q
+    p = q - p
+  }
+  console.log (sum.toFixed(4))
+</script>
+
+<script id="ch0105/33" type="xxx">
+  var n = Number(prompt("请输入项数n"))
+  var sum = 0
+  for (i = 1;i <= n;i++) {
+    if (i % 2 === 1 ) {
+      sum += 1 / i
+    } else {
+      sum -= 1 / i
+    }
+  }
+  sum = sum.toFixed(4)
+  console.log (sum)
+</script>
+
+<script id="ch0105/34" type="xxx">
+  var n = Number(prompt("请输入项数n"))
+  var sum = 0
+  for (i = 1;i <= n ;i++) {
+    var jie = 1
+    for (j = 1;j <= i;j++) {
+      jie *= j
+    }
+    sum += jie
+  }
+  console.log (sum)
+</script>
+
+<script id="ch0105/35" type="xxx">
+  var n = Number(prompt("请输入项数n"))
+  var sum = 1
+  for (i = 1;i <= n ;i++) {
+    var jie = 1
+    for (j = 1;j <= i;j++) {
+      jie *= j
+    }
+    sum += 1 / jie
+  }
+  sum = sum.toFixed(10)
+  console.log (sum)
+</script>
+
+<script id="ch0105/36" type="xxx">
+  var x = Number(prompt("请输入x"))
+  var n = Number(prompt("请输入n"))
+  var sum = 1
+  var digit = 1
+  for (i = 1;i <= n;i++) {
+    digit *= x
+    sum += digit
+  }
+  sum = sum.toFixed(2)
+  console.log (sum)
+</script>
+
+<script id="ch0105/37" type="xxx">
+  var m = Number(prompt("请输入体力值最大M"))
+  var n = Number(prompt("请输入开始时的战斗力N"))
+  var x = Number(prompt("请输入能量元素的个数X"))
+  do {
+    var li =  (m - m % n) / n
+    n += li
+    x -= m
+  } while (x >= 0)
+  console.log (n)
+</script>
+
+<script id="ch0105/39" type="xxx">
+  var isKnocked7 = function (number) {
+    if (number % 7 === 0) {
+      return true
+    } else {
+        do {
+          var digit = number % 10
+          number = (number - digit) / 10
+          if (digit === 7) {
+            return true
+          }
+        } while (number > 0) ;
+        return false
+      }  
+  }
+  var n = Number(prompt("请输入n"))
+  var sum = 0
+  for (i = 1;i < n;i++) {
+    if (!isKnocked7(i)) {
+      sum += i ** 2
+    }
+  }
+  console.log(sum)
+  
+</script>
+
+<script id="ch0105/40" type="xxx">
+  var shu1 = function (number) {
+    var sum = 0
+    do {
+      var digit = number % 10
+      number = (number - digit) / 10
+      if (digit === 1) {
+        sum++
+      }
+    } while (number > 0)
+    return sum
+  }
+  var n = Number(prompt("请输入n"))
+  var sum = 0
+  for (i = 1;i <= n;i++) {
+    sum += shu1(i)
+  }
+  console.log(sum)
+</script>
+
+<script id="ch0105/41" type="xxx">
+  var shu2 = function (number) {
+    var sum = 0
+    do {
+      var digit = number % 10
+      number = (number - digit) / 10
+      if (digit === 2) {
+        sum++
+      }
+    } while (number > 0)
+    return sum
+  }
+  var m = Number(prompt("请输入m"))
+  var n = Number(prompt("请输入n"))
+  var sum = 0
+  for (i = m;i <= n;i++) {
+    sum += shu2(i)
+  }
+  console.log(sum)
+</script>
+
+<script id="ch0105/42" type="xxx">
+  var h = Number(prompt("请输入矩形的高"))
+  var w = Number(prompt("请输入矩形的宽"))
+  var symbol = prompt ("请输入符号")
+  var shi = Number(prompt("请输入是否为实心，1代表实心"))
+  var char =""
+  if (shi === 0) {
+    for (i = 1;i <= h;i++) {
+      if (i === 1 || i === h) {
+        for (j = 1;j <= w;j++) {
+          char += symbol
+        }
+      } else {
+        for (j = 1;j <= w;j++) {
+          if (j === 1 || j === w) {
+            char += symbol
+          } else {
+            char += " "
+          }
+        }
+      }
+      char += "\n"
+    }
+  } else {
+    for (i = 1;i <= h;i++) {
+      for (j = 1;i <= w;i++) {
+        char += symbol
+      }
+    }
+  }
+  console.log (char)
+</script>
+
+<script id="ch0105/43" type="xxx">
+  var isPrime = function(x) {
+    var sqrt = Math.sqrt(x)
+    if (x < 2) {
+      return false
+    }
+    for (let i = 1;i <= sqrt;i++) {
+      if ((x % i === 0) && (i !== 1)) {
+        return false
+      }
+    }
+    return true
+  } // 判断质数的函数
+  var max
+  var number = Number(prompt("请输入数字"))
+  for (i = 0;;i++) {
+    if (isPrime(i)) {
+      if (number % i === 0) {
+        max = number / i
+        console.log(max)
+        break
+      }
+    }
+  }
+</script>
+
+<script id="ch0105/44" type="xxx">
+  var isPrime = function(x) {
+    var sqrt = Math.sqrt(x)
+    if (x < 2) {
+      return false
+    }
+    for (let i = 1;i <= sqrt;i++) {
+      if ((x % i === 0) && (i !== 1)) {
+        return false
+      }
+    }
+    return true
+  } // 判断质数的函数
+  var n = Number(prompt("请输入n"))
+  var sum = 0
+  for (i = 1;;i++) {
+    if (isPrime(i)) {
+      sum++
+    }
+    if (sum === n) {
+      console.log(i)
+      break
+    }
+  }
+</script>
+
+<script id="ch0105/45" type="xxx">
+  var sumDays = 0, sumGold = 0
+  var n = Number(prompt("请输入天数n"))
+  for (i = 1;;i++) {
+    sumDays += i
+    sumGold += i * i 
+    if (sumDays > n) {
+      break
+    }
+  }
+  sumGold -= (sumDays - n) * i
+  console.log (sumGold)
 </script>
 
 <script id="sort" sample-input="4 1 7" sample-output="1 4 7" comment="输入三个数，把此三个数按升序输出" type="xxx">
