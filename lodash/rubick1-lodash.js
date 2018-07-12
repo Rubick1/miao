@@ -1,6 +1,6 @@
 
-var Rubick1 = {
+var rubick1 = {
   chunk: function(array, size) {
-     return true
+     
   }
 }
