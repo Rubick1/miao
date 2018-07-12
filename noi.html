@@ -1084,6 +1084,7 @@
 </script>
 
 <script id="prime" sample-input="7" sample-output="YES" comment="判断一个数是否为素数" type="xxx">
+  //可以利用素数的两性定理优化算法
   var number = Number(prompt("请输入数字"))
   sqrt_number = Math.sqrt (number)
   for (i = 2 ;i <= sqrt_number;i++ ){
@@ -1097,6 +1098,7 @@
 </script>
 
 <script id="primes" sample-input="" sample-output="" comment="输出100以内所有的素数" type="xxx">
+
   for (j = 1;j <= 100;j++){
     sqrt_number = Math.sqrt (j)
     for (i = 1 ;i <= sqrt_number;i++ ){
