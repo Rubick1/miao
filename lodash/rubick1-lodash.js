@@ -21,7 +21,7 @@ var rubick1 = {
     }
     result.push(subArray)
     return result
-  }
+  },
 
   compact: function(array) {
     var result = []
@@ -34,7 +34,7 @@ var rubick1 = {
       }
     }
     return result
-  }
+  },
 
   difference: function(array,...arrays) {
     var length = array.length
@@ -59,7 +59,9 @@ var rubick1 = {
       }
     }
     return result
-  }
+  },
+
+
     
 
 
