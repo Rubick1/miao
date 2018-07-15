@@ -1,6 +1,6 @@
 
 var rubick1 = {
-  chunk: function(array, size) {
+  chunk: function(array, size = 1) {
     var length = array.length
     var i = 0
     var result = []
@@ -49,17 +49,361 @@ var rubick1 = {
     var compareArrayLength = compareArray.length
     for (let i = 0;i < length;i++) {
       var value = array[i]
-      for (let j = 0;j < compareArrayLength;j++) {
-        if (SameValueZero(value,compareArray[j])) {
+      if (compareArray.indexOf(value) == -1) {
+        result.push(value)
+      }
+    }
+    return result
+  },
+
+  drop: function(array,n = 1) {
+    var length = array.length
+    var result = []
+    if (n >= length) {
+      return result
+    }
+    for (let i = n;i < length;i++) {
+      result.push(array[i])
+    }
+    return result
+  },
+
+  dropRight: function(array,n = 1) {
+    var length = array.length
+    var result = []
+    if (n >= length) {
+      return result
+    }
+    for (let i = 0 ;i < length - n;i++) {
+      result.push(array[i])
+    }
+    return result
+  },
+
+  fill: function(array,value,start,end) {
+    start = start || 0
+    end = end || array.length
+    for (let i = start;i < end;i++) {
+      array[i] = value
+    }
+  },
+
+  head: function(array) {
+    if (array.length == 0) {
+      return undefined
+    }
+    return array[0]
+  },
+  
+
+  flatten: function(array) {
+    for (let i = 0;i < array.length;i++) {
+      if (typeof array[i] == "object") {
+        return array.slice(0,i).concat(array[i]).concat(array.slice(i+1))
+      }
+    }
+    return array
+  },
+  
+  //这个感觉是应该用递归来做的，但是递归实在不熟悉。。
+  //做出来了！！😊😊 美滋滋
+  flattenDeep: function(array) {
+    for (let i = 0;i < array.length;i++) {
+      if (typeof array[i] == "object") {
+        for (let j = 0;j < array[i].length;j++) {
+          if (typeof array[i][j] == "object") {
+            return array.slice(0,i).concat(flattenDeep(array[i])).concat(array.slice(i+1))
+          }
+        }
+        return array.slice(0,i).concat(flatten(array[i])).concat(array.slice(i+1))
+      }  
+    }
+    return array
+  },
+
+  flattenDepth: function(array,depth = 1) {
+    var result = array
+    while (depth > 0) {
+      result = flatten(result)
+      depth--
+    }
+    return result
+  },
+  
+  fromPairs: function(array) {
+    var map = {}
+    for (let i = 0;i < length;i++) {
+      map[array[i][0]] = array[i][1]
+    }
+    return map
+  },
+  
+  indexOf: function(array,value,fromIndex = 0) {
+    if (fromIndex >= 0) {
+      for (let i = fromIndex;i < array.length;i++) {
+        if (array[i] == value) {
+          return i
+        }
+      }
+    }else {
+      for (let i = fromIndex + array.length; i < array.length;i++) {
+        if (array[i] == value) {
+          return i
+        }
+      }
+    }
+    return -1
+  },
+
+  initial: function(array) {
+    return array.slice(0,array.length - 1)
+  },
+
+  intersection: function(...arrays) {
+    var minLength = Infinity
+    var minArrayIndex = 0
+    var result = []
+    for (let i = 0;i < arrays.length;i++) {
+      if (arrays[i].length <= minLength) {
+        minArrayIndex = i
+        minLength = arrays[i].length
+      }
+    }
+
+    var minArray = arrays[minArrayIndex]
+    var map = {}
+    var uniqueArray = []
+    for (let i = 0;i < minLength;i++) {
+      if (minArray[i] in map) {
+        continue
+      } else {
+        map[minArray[i]] = 1
+        uniqueArray.push(minArray[i])
+      }
+    }
+    //需要清除minArray里面的重复项
+    for (let i = 0;i < uniqueArray.length;i++) {
+      var value = uniqueArray[i]
+      for (let j = 0;j < arrays.length;j++) {
+        if (arrays[j].indexOf(value) == -1) {
           break
         }
-        if ( j = compareArrayLength - 1) {
+        if (j == arrays.length - 1) {
           result.push(value)
+        }
+      }
+    }
+
+    return result
+  },
+
+  join: function(array,separator = ",") {
+    var result = ""
+    if (array.length == 0) {
+      return result
+    }
+    if (array.length == 1) {
+      result += array[0]
+      return result
+    }
+    result += array[0]
+    for (let i = 1;i < array.length;i++) {
+      result += separator + array[i]
+    } 
+    return result
+  },
+
+  last: function(array) {
+    if (array.length == 0) {
+      return array
+    }
+    return array[array.length - 1]
+  },
+
+  lastIndexOf: function(array,value,fromIndex) {
+    fromIndex = fromIndex || array.length - 1
+    for (let i = fromIndex;i >= 0;i--) {
+      if (array[i] == value) {
+        return i
+      }
+    }
+    return -1
+  },
+
+  nth: function(array,n = 0) {
+    if (n >= 0) {
+      return array[0]
+    } else {
+      return array[array.length + n]
+    }
+  },
+  
+  pull: function(array,...vals) {
+    for (let i = 0;i < vals.length;i++) {
+      while(true) {
+        var valIndex = array.indexOf(vals[i])
+        if (valIndex == -1) {
+          break
+        } else{
+          array.splice(valIndex,1)
+        }
+      }
+    }
+  },
+
+  pullAll: function(array,values) {
+    for (let i = 0;i < values.length;i++) {
+      while(true) {
+        var valIndex = array.indexOf(values[i])
+        if (valIndex == -1) {
+          break
+        } else{
+          array.splice(valIndex,1)
+        }
+      }
+    }
+  },
+
+  reverse: function(array) {
+    return array.reverse()
+    //有一种作弊的快感。。
+  },
+  
+  sortedIndex: function(array,value) {
+    var left = 0
+    var right = array.length - 1 
+    if (value < array[left]) {
+      return 0
+    }
+    if (value > array[right]) {
+      return array.length
+    }
+    var half = Math.floor((left + right) / 2)
+    while(true) {
+      if (left == right - 1) {
+        return right
+      }
+      if (array[half] > value) {
+        right = half
+      } 
+      if (array[half] < value) {
+        left = half
+      }
+      if (array[half] == value) {
+        return half
+      }
+      half = Math.floor((left + right) / 2)
+    } 
+  },
+
+  sortedUniq: function(array) {
+    var result = []
+    var number = Infinity
+    for (let i = 0;i < array.length;i++) {
+      if (array[i] != number) {
+        result.push(array[i])
+        number = array[i]
+      }
+    }
+    return result
+  },
+
+  tail: function(array) {
+    if (array.length <= 1) {
+      return []
+    }
+    return array.slice(1)
+  },
+
+  take: function(array,n = 1) {
+    n = Math.min(array.length,n)
+    return array.slice(0,n)
+  },
+
+  takeRight: function(array,n = 1) {
+    n = Math.max(0,array.length - n) 
+    return array.slice(n)
+  },
+
+  union: function(...arrays) {
+    var result = []
+    for (let i = 0;i < arrays.length;i++) {
+      var array = arrays[i]
+      for (let j = 0;j < array.length;j++) {
+        if(result.indexOf(array[j]) == -1) {
+          result.push(array[j])
         }
       }
     }
     return result
   },
+
+  uniq: function(array) {
+    var result = []
+    for (let i = 0;i < array.length;i++) {
+      if (result.indexOf(array[i]) == -1) {
+        result.push(array[i])
+      }
+    }
+    return result
+  },
+  
+  unzip: function(array) {
+    var length = array[0].length
+    var result = []  
+    for (let i = 0;i < length;i++) {
+      var subArray = []
+      for (let j = 0;j < array.length;j++) {
+        subArray.push(array[j][i])
+      }
+      result.push(subArray)
+    }
+    return result
+  },
+  
+  without: function(array,...values) {
+    var result = []
+    for (let i = 0;i < array.length;i++) {
+      if (values.indexOf(array[i]) == -1) {
+        result.push(array[i])
+      }
+    }
+    return result
+  },
+
+  zip: function(...arrays) {
+    var length = arrays[0].length
+    var result = []
+    for (let i = 0;i < length;i++) {
+      var subArray =[]
+      for (let j = 0;j < arrays.length;j++) {
+        subArray.push(arrays[j][i])
+      }
+      result.push(subArray)
+    }
+    return result
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
 
 
     
