@@ -86,6 +86,7 @@ var rubick1 = {
     for (let i = start;i < end;i++) {
       array[i] = value
     }
+    return array
   },
 
   head: function(array) {
@@ -94,7 +95,7 @@ var rubick1 = {
     }
     return array[0]
   },
-  
+
 
   flatten: function(array) {
     for (let i = 0;i < array.length;i++) {
@@ -112,10 +113,10 @@ var rubick1 = {
       if (typeof array[i] == "object") {
         for (let j = 0;j < array[i].length;j++) {
           if (typeof array[i][j] == "object") {
-            return array.slice(0,i).concat(flattenDeep(array[i])).concat(array.slice(i+1))
+            return array.slice(0,i).concat(rubick1.flattenDeep(array[i])).concat(array.slice(i+1))
           }
         }
-        return array.slice(0,i).concat(flatten(array[i])).concat(array.slice(i+1))
+        return array.slice(0,i).concat(rubick1.flatten(array[i])).concat(array.slice(i+1))
       }  
     }
     return array
@@ -124,7 +125,7 @@ var rubick1 = {
   flattenDepth: function(array,depth = 1) {
     var result = array
     while (depth > 0) {
-      result = flatten(result)
+      result = rubick1.flatten(result)
       depth--
     }
     return result
@@ -132,7 +133,7 @@ var rubick1 = {
   
   fromPairs: function(array) {
     var map = {}
-    for (let i = 0;i < length;i++) {
+    for (let i = 0;i < array.length;i++) {
       map[array[i][0]] = array[i][1]
     }
     return map
@@ -208,7 +209,8 @@ var rubick1 = {
     }
     result += array[0]
     for (let i = 1;i < array.length;i++) {
-      result += separator + array[i]
+      result += separator 
+      result += array[i]
     } 
     return result
   },
@@ -232,7 +234,7 @@ var rubick1 = {
 
   nth: function(array,n = 0) {
     if (n >= 0) {
-      return array[0]
+      return array[n]
     } else {
       return array[array.length + n]
     }
@@ -249,6 +251,7 @@ var rubick1 = {
         }
       }
     }
+    return array
   },
 
   pullAll: function(array,values) {
@@ -262,38 +265,28 @@ var rubick1 = {
         }
       }
     }
+    return array
   },
 
   reverse: function(array) {
-    return array.reverse()
-    //有一种作弊的快感。。
+    var halfLength = Math.floor(array.length / 2)
+    for (let i = 0;i < halfLength;i++) {
+      var temp = array[i]
+      array[i] = array[length - 1 - i]
+      array[length - 1 - i] = temp
+    }
+    return array
   },
   
   sortedIndex: function(array,value) {
     var left = 0
     var right = array.length - 1 
-    if (value < array[left]) {
-      return 0
-    }
-    if (value > array[right]) {
-      return array.length
-    }
     var half = Math.floor((left + right) / 2)
-    while(true) {
-      if (left == right - 1) {
-        return right
-      }
-      if (array[half] > value) {
-        right = half
-      } 
-      if (array[half] < value) {
-        left = half
-      }
-      if (array[half] == value) {
-        return half
-      }
+    while(right - left > 1) {
+      array[half] >= value ? right = half : left = half
       half = Math.floor((left + right) / 2)
     } 
+    return array[right] >= value ? right : right + 1
   },
 
   sortedUniq: function(array) {
@@ -324,7 +317,7 @@ var rubick1 = {
     n = Math.max(0,array.length - n) 
     return array.slice(n)
   },
-
+  
   union: function(...arrays) {
     var result = []
     for (let i = 0;i < arrays.length;i++) {
