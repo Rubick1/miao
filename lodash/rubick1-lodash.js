@@ -96,28 +96,24 @@ var rubick1 = {
     return array[0]
   },
 
-
+  //flatten的理解有误，实际上每次是把数组展开一个层级,返回的是新的数组
   flatten: function(array) {
+    var result = []
     for (let i = 0;i < array.length;i++) {
       if (typeof array[i] == "object") {
-        return array.slice(0,i).concat(array[i]).concat(array.slice(i+1))
+        array[i].forEach(value => {result.push(value)})
+      } else {
+        result.push(array[i])
       }
     }
-    return array
+    return result
   },
   
-  //这个感觉是应该用递归来做的，但是递归实在不熟悉。。
-  //做出来了！！😊😊 美滋滋
   flattenDeep: function(array) {
     for (let i = 0;i < array.length;i++) {
-      if (typeof array[i] == "object") {
-        for (let j = 0;j < array[i].length;j++) {
-          if (typeof array[i][j] == "object") {
-            return array.slice(0,i).concat(rubick1.flattenDeep(array[i])).concat(array.slice(i+1))
-          }
-        }
-        return array.slice(0,i).concat(rubick1.flatten(array[i])).concat(array.slice(i+1))
-      }  
+      if (typeof array[i] == "object") { 
+        return rubick1.flattenDeep(rubick1.flatten(array))      
+      } 
     }
     return array
   },
@@ -269,6 +265,7 @@ var rubick1 = {
   },
 
   reverse: function(array) {
+    var length = array.length
     var halfLength = Math.floor(array.length / 2)
     for (let i = 0;i < halfLength;i++) {
       var temp = array[i]
