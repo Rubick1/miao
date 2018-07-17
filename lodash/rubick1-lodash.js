@@ -101,7 +101,7 @@ var rubick1 = {
     var result = []
     for (let i = 0;i < array.length;i++) {
       if (typeof array[i] == "object") {
-        array[i].forEach(value => {result.push(value)})
+        array[i].forEach(value => result.push(value))
       } else {
         result.push(array[i])
       }
@@ -373,6 +373,63 @@ var rubick1 = {
     }
     return result
   },
+
+  map: function(array,mapper) {
+    return array.reduce(function(result,item){
+      result.push(mapper(item))
+      return result
+    },[])
+  },
+
+  filter: function(array,test) {
+    return array.reduce(function(result,item){
+      if (test(item)) {
+        result.push(item)
+      }
+      return result
+    },[])
+  },
+
+  forEach: function(array,action) {
+    array.reduce((result,item) => {action(item)},[])
+  },
+  
+  slice: function(array,start,end) {
+    start = start || 0
+    end = end || array.length
+    return array.reduce(function(result,item,i){
+      if (i >= start && i < end) {
+        result.push(item)
+      }
+      return result
+    },[])
+  },
+
+  fill: function(array,value,start,end) {
+    start = start || 0
+    end = end || array.length
+    return array.reduce(function(result,item,i){
+      if (i >= start && i < end) {
+        result.push(value)
+      } else{
+        result.push(item)
+      }
+      return result
+    },[])
+  },
+
+  concat: function(array,...values) {
+    return values.reduce(function(result,item){
+      typeof item == "object" ? result.push(...item) : result.push(item)
+      return result
+    },array)
+  },
+
+  
+
+
+
+
 
 
 
