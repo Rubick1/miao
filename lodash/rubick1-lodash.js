@@ -374,6 +374,13 @@ var rubick1 = {
     return result
   },
 
+  zipObject: function(props,values) {
+    return props.reduce(function(result,item,i){
+      result[item] = values[i]
+      return result
+    },{})
+  },
+
   map: function(array,mapper) {
     return array.reduce(function(result,item){
       result.push(mapper(item))
@@ -383,15 +390,21 @@ var rubick1 = {
 
   filter: function(array,test) {
     return array.reduce(function(result,item){
-      if (test(item)) {
-        result.push(item)
+      if (typeof test == "function") {
+        if (test(item)) {
+          result.push(item)
+        }       
+      } else {
+        if (item.test) {
+          result.push(item)
+        }
       }
-      return result
+      return result      
     },[])
   },
 
   forEach: function(array,action) {
-    array.reduce((result,item) => {action(item)},[])
+    return array.reduce((result,item,i,array) => {action(item,i,array)},[])
   },
   
   slice: function(array,start,end) {
@@ -425,9 +438,32 @@ var rubick1 = {
     },array)
   },
 
+  isEqual: function(value,other) {
+    if (value === other) {
+      return true
+    }
+    if (value != value && other != other) {
+      return true
+    }
+    if (typeof value == "object" && typeof other == "object") {
+      var valueKeys = Object.keys(value)
+      var otherKeys = Object.keys(other)
+      if (valueKeys.length != otherKeys.length) {
+        return false
+      }
+      for (var prop in value) {
+        if (deepEqual(value[prop],other[prop])) {
+          continue
+        } else {
+          return false
+        }
+      }
+      return true
+    }
+    return value === other
+  },
+
   
-
-
 
 
 
