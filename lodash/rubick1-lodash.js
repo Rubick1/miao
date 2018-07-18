@@ -452,7 +452,7 @@ var rubick1 = {
         return false
       }
       for (var prop in value) {
-        if (deepEqual(value[prop],other[prop])) {
+        if (rubick1.isEqual(value[prop],other[prop])) {
           continue
         } else {
           return false
@@ -462,6 +462,8 @@ var rubick1 = {
     }
     return value === other
   },
+
+  
 
   
 
