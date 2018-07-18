@@ -382,6 +382,7 @@ var rubick1 = {
   },
 
   map: function(array,mapper) {
+    mapper = rubick1.iteratee(mapper)
     return array.reduce(function(result,item){
       result.push(mapper(item))
       return result
@@ -389,6 +390,7 @@ var rubick1 = {
   },
 
   filter: function(array,test) {
+    test = rubick1.iteratee(test)
     return array.reduce(function(result,item){
       if (typeof test == "function") {
         if (test(item)) {
@@ -404,6 +406,7 @@ var rubick1 = {
   },
 
   forEach: function(array,action) {
+    action = rubick1.iteratee(action)
     return array.reduce((result,item,i,array) => {action(item,i,array)},[])
   },
   
@@ -463,7 +466,58 @@ var rubick1 = {
     return value === other
   },
 
+  identity: value =>value
+  ,
+
+  iteratee: function(iter) {
+    if (typeof iter == "function") {
+      return iter
+    }
+    if (typeof iter == "string") {
+      return rubick1.property(iter)
+    }
+    if (rubick1.isArray(iter)) {
+      return rubick1.matchesProperty(...iter)
+    }
+    if (rubick1.isObject(iter)) {
+      return rubick1.matches(iter)
+    }
+  },
+
+  property: function(path) {
+    if (typeof path == "string") {
+      path = path.split(".")
+    } 
+    return function(obj) {
+      path.forEach((item)=> obj = obj[item])
+      return obj
+    }
+  },
   
+  matches: function(source) {
+    return function(obj) {
+      for (var prop in source) {
+        if (!rubick1.isEqual(source[prop],obj[prop])) {
+          return false
+        }
+      }
+      return true
+    }
+  },
+
+  matchesProperty: function(path,srcValue) {
+    return function(obj) {
+      return rubick1.isEqual(rubick1.property(path)(obj),srcValue)
+    }
+  },
+  //这个matchprperty暂时只能接收一组数据
+
+  //等会再写几个判断是否是字符串\数组、对象的函数，iteratee就可以跑起来了
+  isArray: value => value instanceof Array,
+
+  isObject: value => value instanceof Object,
+  
+
 
   
 
