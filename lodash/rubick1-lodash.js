@@ -46,32 +46,66 @@ var rubick1 = {
     },[])   
   },
 
-  differenceBy: function(array,...arrays) {
-
-  },
-
-  drop: function(array,n = 1) {
-    var length = array.length
+  differenceBy: function(array,...args) {
+    var iteratee
+    if (typeof args[args.length - 1] == "string" || typeof args[args.length - 1] == "function") {
+      iteratee = rubick1.iteratee(args.pop())
+    } else{
+      iteratee = rubick1.identity
+    }
+    var compareArray = [].concat(...args)
+    compareArray = compareArray.map(item =>iteratee(item))
     var result = []
-    if (n >= length) {
-      return result
-    }
-    for (let i = n;i < length;i++) {
-      result.push(array[i])
-    }
+    array.forEach(function(item){
+      if (!compareArray.includes(iteratee(item))) {
+        result.push(item)
+      }
+    })
     return result
   },
 
-  dropRight: function(array,n = 1) {
-    var length = array.length
-    var result = []
-    if (n >= length) {
-      return result
+  differenceWith: function(array,...args) {
+    var comparator
+    if (typeof args[args.length - 1] == "function") {
+      comparator = args.pop()
+    } else {
+      return array
     }
-    for (let i = 0 ;i < length - n;i++) {
-      result.push(array[i])
+    var compareArray = [].concat(...args)
+    return array.filter(function(val){
+      for (let i = 0;i < compareArray.length;i++) {
+        if (comparator(val,compareArray[i])) {
+          return true
+        }
+        if (i == compareArray.length - 1) {
+          return false
+        } 
+      }
+    })
+  },
+  
+  drop: (array,n = 1) => n >= array.length ? [] : array.slice(n),
+
+  dropRight: (array,n = 1) => n >= array.length ? [] : array.slice(0,array.length - n),
+
+  dropRightWhile: function(array,predicate=rubick1.identity) {
+    predicate = rubick1.iteratee(predicate)
+    for (var i = array.length - 1;i >= 0;i--) {
+      if (!predicate(array[i])) {
+        break
+      }
     }
-    return result
+    return array.slice(0,i+1)
+  },
+
+  dropWhile: function(array,predicate=rubick1.identity) {
+    predicate = rubick1.iteratee(predicate)
+    for (var i = 0;i < array.length;i++) {
+      if(!predicate(array[i])) {
+        break
+      }
+    }
+    return array.slice(i)
   },
 
   fill: function(array,value,start,end) {
@@ -82,6 +116,8 @@ var rubick1 = {
     }
     return array
   },
+
+  // findIndex: function(array,predicate=rubick1.identity,)
 
   head: function(array) {
     if (array.length == 0) {
