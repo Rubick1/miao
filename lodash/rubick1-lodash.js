@@ -37,23 +37,17 @@ var rubick1 = {
   },
 
   difference: function(array,...arrays) {
-    var length = array.length
-    var arraysLength = arrays.length
-    var result = []
-    var compareArray = arrays[0]
-    if (arrays.length > 1) {
-      for (let i = 1;i < arraysLength;i++) {
-        compareArray = compareArray.concat(arrays[i])
+    var compareArray = [].concat(...arrays)
+    return array.reduce((result,item) => {
+      if (compareArray.indexOf(item) == -1) {
+        result.push(item)
       }
-    }
-    var compareArrayLength = compareArray.length
-    for (let i = 0;i < length;i++) {
-      var value = array[i]
-      if (compareArray.indexOf(value) == -1) {
-        result.push(value)
-      }
-    }
-    return result
+      return result
+    },[])   
+  },
+
+  differenceBy: function(array,...arrays) {
+
   },
 
   drop: function(array,n = 1) {
