@@ -75,10 +75,10 @@ var rubick1 = {
     return array.filter(function(val){
       for (let i = 0;i < compareArray.length;i++) {
         if (comparator(val,compareArray[i])) {
-          return true
+          return false
         }
         if (i == compareArray.length - 1) {
-          return false
+          return true 
         } 
       }
     })
@@ -117,7 +117,25 @@ var rubick1 = {
     return array
   },
 
-  // findIndex: function(array,predicate=rubick1.identity,)
+  findIndex: function(array,predicate=rubick1.identity,fromIndex = 0) {
+    predicate = rubick1.iteratee(predicate)
+    for (let i = fromIndex;i < array.length;i++) {
+      if (predicate(array[i])) {
+        return i
+      }
+    }
+    return -1
+  },
+
+  findLastIndex: function(array,predicate=rubick1.identity,fromIndex = array.length - 1) {
+    predicate = rubick1.iteratee(predicate)
+    for (let i = fromIndex;i >=0;i--) {
+      if (predicate(array[i])) {
+        return i
+      }
+    }
+    return -1
+  },
 
   head: function(array) {
     if (array.length == 0) {
@@ -185,43 +203,89 @@ var rubick1 = {
   initial: function(array) {
     return array.slice(0,array.length - 1)
   },
-
+  //尝试优化
   intersection: function(...arrays) {
-    var minLength = Infinity
-    var minArrayIndex = 0
-    var result = []
-    for (let i = 0;i < arrays.length;i++) {
-      if (arrays[i].length <= minLength) {
-        minArrayIndex = i
-        minLength = arrays[i].length
+    var minArray = arrays.reduce(function(result,item){
+      if (item.length < result.length) {
+        result = item
       }
-    }
+      return result
+    })
+    minArray = rubick1.uniq(minArray)
+    return minArray.filter(function(item){
+      for(let i = 0;i < arrays.length;i++) {
+        if (!arrays[i].includes(item)) {
+          return false
+        }
+      }
+      return true
+    },[])   
+  },
 
-    var minArray = arrays[minArrayIndex]
-    var map = {}
-    var uniqueArray = []
-    for (let i = 0;i < minLength;i++) {
-      if (minArray[i] in map) {
-        continue
-      } else {
-        map[minArray[i]] = 1
-        uniqueArray.push(minArray[i])
-      }
+  //...只能出现在最后面，明天重新写
+
+  intersectionBy: function(...arrays) {
+    var iteratee
+    if (typeof arrays[arrays.length - 1] == "function") {
+      iteratee = arrays.pop()
+    } else{
+      iteratee = rubick1.identity
     }
-    //需要清除minArray里面的重复项
-    for (let i = 0;i < uniqueArray.length;i++) {
-      var value = uniqueArray[i]
-      for (let j = 0;j < arrays.length;j++) {
-        if (arrays[j].indexOf(value) == -1) {
+    iteratee = rubick1.iteratee(iteratee)
+    var minArray = arrays.reduce(function(result,item){
+      if (item.length < result.length) {
+        result = item
+      }
+      return result
+    })
+    //三重循环用高阶写起来好绝望，还是用for吧
+    arrays = arrays.map(function(array){
+        return array.map(function(item){
+        return iteratee(item)
+      })
+    })
+    //测试看看
+    return minArray.reduce(function(result,item) {
+      for (let i = 0;i < arrays.length;i++) {
+        if (!arrays[i].includes(iteratee(item))) {
           break
         }
-        if (j == arrays.length - 1) {
-          result.push(value)
+        if (i == arrays.length - 1) {
+          result.push(item)
         }
       }
-    }
+      return result
+    },[])   
+  },
+   
+  //未完成
+  intersectionWith: function(...arrays) {
+    var comparator
+    if (typeof arrays[arrays.length - 1] == "function") {
+      comparator = arrays.pop()
+    } 
+    
+    var minArray = arrays.reduce(function(result,item){
+      if (item.length < result.length) {
+        result = item
+      }
+      return result
+    })
 
-    return result
+    return minArray.filter(function(item) {
+      for (let i = 0;i < arrays.length;i++) {
+        var array = arrays[i]
+        for (let j = 0;j < array.length;j++) {
+          if(comparator(array[j],item)) {
+            break
+          }
+          if (j == array.length - 1) {
+            return false
+          }
+        }
+      }
+      return true
+    })
   },
 
   join: function(array,separator = ",") {
