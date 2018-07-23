@@ -226,7 +226,7 @@ var rubick1 = {
 
   intersectionBy: function(...arrays) {
     var iteratee
-    if (typeof arrays[arrays.length - 1] == "function") {
+    if (typeof arrays[arrays.length - 1] == "function" ||typeof arrays[arrays.length - 1] == "string") {
       iteratee = arrays.pop()
     } else{
       iteratee = rubick1.identity
@@ -258,7 +258,7 @@ var rubick1 = {
     },[])   
   },
    
-  //未完成
+  
   intersectionWith: function(...arrays) {
     var comparator
     if (typeof arrays[arrays.length - 1] == "function") {
@@ -329,33 +329,47 @@ var rubick1 = {
       return array[array.length + n]
     }
   },
-  
+  //pull和pullAll的不同之处仅仅在于传进来的数据的形式，一个是数组展开，一个是在数组里
   pull: function(array,...vals) {
-    for (let i = 0;i < vals.length;i++) {
-      while(true) {
-        var valIndex = array.indexOf(vals[i])
-        if (valIndex == -1) {
-          break
-        } else{
-          array.splice(valIndex,1)
-        }
-      }
-    }
-    return array
+    // for (let i = 0;i < vals.length;i++) {
+    //   while(true) {
+    //     var valIndex = array.indexOf(vals[i])
+    //     if (valIndex == -1) {
+    //       break
+    //     } else{
+    //       array.splice(valIndex,1)
+    //     }
+    //   }
+    // }
+    // return array
+    //上面是说人话版本，下面是升级版
+    return array.filter(item =>!vals.some(val =>item == val))
   },
 
+  //从数组里面删除部分元素
   pullAll: function(array,values) {
-    for (let i = 0;i < values.length;i++) {
-      while(true) {
-        var valIndex = array.indexOf(values[i])
-        if (valIndex == -1) {
-          break
-        } else{
-          array.splice(valIndex,1)
-        }
-      }
-    }
-    return array
+    // for (let i = 0;i < values.length;i++) {
+    //   while(true) {
+    //     var valIndex = array.indexOf(values[i])
+    //     if (valIndex == -1) {
+    //       break
+    //     } else{
+    //       array.splice(valIndex,1)
+    //     }
+    //   }
+    // }
+    // return array
+    //上面是说人话版本，下面是升级版
+    return array.filter(item =>!values.some(value =>item == value))
+  },
+
+  pullAllBy: function(array,values,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    return array.filter(item => !values.some(value => iteratee(value) == iteratee(item)))
+  },
+
+  pullAllWith: function(array,values,comparator) {
+    return array.filter(item => !values.some(value => comparator(value,item)))
   },
 
   reverse: function(array) {
@@ -377,19 +391,81 @@ var rubick1 = {
       array[half] >= value ? right = half : left = half
       half = Math.floor((left + right) / 2)
     } 
-    return array[right] >= value ? right : right + 1
+    return array[left] == value ? left : right
+  },
+
+  sortedIndexBy: function(array,value,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var left = 0 
+    var right = array.length - 1 
+    var half = Math.floor((left + right) / 2)
+    while (right - left > 1) {
+      iteratee(array[half]) >= iteratee(value) ? right = half : left = half
+      half = Math.floor((left + right) / 2)
+    }
+    return iteratee(array[left]) == iteratee(value) ? left : right
+  },
+
+  sortedIndexOf: function(array,value) {
+    var left = 0 
+    var right = array.length - 1 
+    var half = Math.floor((left + right) / 2)
+    while (right - left > 1) {
+      array[half] >= value ? right = half : left = half
+      half = Math.floor((left + right) / 2)
+    }
+    if (array[left] != value && array[right] != value) {
+      return -1
+    }
+    return array[left] == value ? left : right
+  },
+
+  sortedLastIndex: function(array,value) {
+    var left = 0
+    var right = array.length - 1 
+    var half = Math.floor((left + right) / 2)
+    while(right - left > 1) {
+      array[half] > value ? right = half : left = half
+      half = Math.floor((left + right) / 2)
+    } 
+    console.log(right)
+    console.log(left)
+    return array[left] == value ? right : right + 1
+  },
+
+  sortedLastIndexBy: function(array,value,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var left = 0 
+    var right = array.length - 1 
+    var half = Math.floor((left + right) / 2)
+    while (right - left > 1) {
+      iteratee(array[half]) > iteratee(value) ? right = half : left = half
+      half = Math.floor((left + right) / 2)
+    }
+    return iteratee(array[left]) == iteratee(value) ? right : right + 1
+  },
+
+  sortedLastIndexOf: function(array,value) {
+    var left = 0 
+    var right = array.length - 1 
+    var half = Math.floor((left + right) / 2)
+    while (right - left > 1) {
+      array[half] > value ? right = half : left = half
+      half = Math.floor((left + right) / 2)
+    }
+    if (array[left] != value && array[right] != value) {
+      return -1
+    }
+    return array[left] == value ? left : right
   },
 
   sortedUniq: function(array) {
-    var result = []
-    var number = Infinity
-    for (let i = 0;i < array.length;i++) {
-      if (array[i] != number) {
-        result.push(array[i])
-        number = array[i]
-      }
-    }
-    return result
+    return array.filter((item,idx) => item != array[idx - 1])
+  },
+
+  sortedUniqBy: function(array,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    return array.filter((item,idx) => iteratee(item) != iteratee(array[idx - 1]))
   },
 
   tail: function(array) {
