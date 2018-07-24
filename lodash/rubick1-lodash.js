@@ -464,7 +464,7 @@ var rubick1 = {
   },
 
   sortedUniqBy: function(array,iteratee = rubick1.identity) {
-    iteratee = rubick1.iteratee(iteratee)
+    var iteratee = rubick1.iteratee(iteratee)
     return array.filter((item,idx) => iteratee(item) != iteratee(array[idx - 1]))
   },
 
@@ -484,43 +484,110 @@ var rubick1 = {
     n = Math.max(0,array.length - n) 
     return array.slice(n)
   },
-  
-  union: function(...arrays) {
-    var result = []
-    for (let i = 0;i < arrays.length;i++) {
-      var array = arrays[i]
-      for (let j = 0;j < array.length;j++) {
-        if(result.indexOf(array[j]) == -1) {
-          result.push(array[j])
-        }
+
+  takeRightWhile: function(array,predicate = rubick1.identity) {
+    var predicate = rubick1.iteratee(predicate)
+    for (let i = array.length - 1;i >= 0;i--) {
+      if (!predicate(array[i])) {
+        return array.slice(i+1)
       }
     }
-    return result
+  },
+
+  takeWhile: function(array,predicate = rubick1.identity) {
+    var predicate = rubick1.iteratee(predicate)
+    for (let i = 0;i < array.length;i++) {
+      if (!predicate(array[i])) {
+        return array.slice(0,i)
+      }
+    }
+  },
+  
+  union: function(...arrays) {
+    // var result = []
+    // for (let i = 0;i < arrays.length;i++) {
+    //   var array = arrays[i]
+    //   for (let j = 0;j < array.length;j++) {
+    //     if(result.indexOf(array[j]) == -1) {
+    //       result.push(array[j])
+    //     }
+    //   }
+    // }
+    // return result
+    return rubick1.uniq([].concat(...arrays))
+  },
+ 
+  //还没写完，等uniqBy写完了直接调用就ok
+  unionBy: function(...args) {
+    var iteratee
+    if (typeof args[args.length - 1] == "function" || typeof args[args.length - 1] == "string") {
+      iteratee = args.pop()
+    } else {
+      iteratee = rubick1.identity
+    } 
+    return rubick1.uniqBy([].concat(...args),iteratee)
+  },
+
+  unionWith: function(...args) {
+    var iteratee
+    if (typeof args[args.length - 1] == "function" || typeof args[args.length - 1] == "string") {
+      iteratee = args.pop()
+    } else {
+      iteratee = rubick1.identity
+    } 
+    return rubick1.uniqWith([].concat(...args),iteratee)
   },
 
   uniq: function(array) {
-    var result = []
-    for (let i = 0;i < array.length;i++) {
-      if (result.indexOf(array[i]) == -1) {
-        result.push(array[i])
-      }
-    }
-    return result
+    // return array.reduce(function(result,item) {
+    //   if (!result.includes(item)) {
+    //     result.push(item)
+    //   }
+    //   return result
+    // },[])
+    return array.reduce((result,item) => {return result.includes(item) || result.push(item),result},[])
+  },
+
+  uniqBy: function(array,iteratee = rubick1.iteratee) {
+    var iteratee = rubick1.iteratee(iteratee)
+    // return array.reduce(function(result,item){
+    //   if (!result.some(function(val) {
+    //     return iteratee(val) == iteratee(item)
+    //   })) {
+    //     result.push(item)
+    //   }
+    //   return result
+    // },[])
+    return array.reduce((result,item) =>{return result.some(val =>iteratee(val) == iteratee(item)) || result.push(item),result},[])
+  },
+
+  uniqWith: function(array,comparator) {
+    return array.reduce((result,item) =>{return result.some(val => comparator(val,item)) || result.push(item),result},[])
   },
   
   unzip: function(array) {
-    var length = array[0].length
-    var result = []  
-    for (let i = 0;i < length;i++) {
-      var subArray = []
-      for (let j = 0;j < array.length;j++) {
-        subArray.push(array[j][i])
-      }
-      result.push(subArray)
-    }
-    return result
+    // var length = array[0].length
+    // var result = []  
+    // for (let i = 0;i < length;i++) {
+    //   var subArray = []
+    //   for (let j = 0;j < array.length;j++) {
+    //     subArray.push(array[j][i])
+    //   }
+    //   result.push(subArray)
+    // }
+    // return result
+    return array.reduce((result,item,idx) => {
+      return item.forEach((val,index) =>result[index] ? result[index][idx] = val : result[index] = [val]),result
+    },[])
   },
   
+  //还没完成
+  unzipWith: function(array,iteratee = rubick1.identity) {
+    return rubick1.unzip(array).map(function(item){
+      return item.reduce(iteratee)
+    })
+  },
+
   without: function(array,...values) {
     var result = []
     for (let i = 0;i < array.length;i++) {
@@ -686,6 +753,8 @@ var rubick1 = {
   isArray: value => value instanceof Array,
 
   isObject: value => value instanceof Object,
+
+  add: (a,b) => a + b,
   
 
 
