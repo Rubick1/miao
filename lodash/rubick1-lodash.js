@@ -581,7 +581,7 @@ var rubick1 = {
     },[])
   },
   
-  //还没完成
+  
   unzipWith: function(array,iteratee = rubick1.identity) {
     return rubick1.unzip(array).map(function(item){
       return item.reduce(iteratee)
@@ -589,26 +589,52 @@ var rubick1 = {
   },
 
   without: function(array,...values) {
-    var result = []
-    for (let i = 0;i < array.length;i++) {
-      if (values.indexOf(array[i]) == -1) {
-        result.push(array[i])
-      }
-    }
-    return result
+    // var result = []
+    // for (let i = 0;i < array.length;i++) {
+    //   if (values.indexOf(array[i]) == -1) {
+    //     result.push(array[i])
+    //   }
+    // }
+    // return result
+    return array.reduce((result,item) =>(values.includes(item) || result.push(item),result),[])
+
+  },
+
+  xor: function(...arrays) {
+    return [].concat(...arrays).reduce(function(result,item,idx,array){
+      return array.some((value,index) => {return value == item && idx != index}) || result.push(item),result},[])
+  },
+
+  xorBy: function(...args) {
+    var iteratee
+    if (typeof args[args.length - 1] == "function" || typeof args[args.length - 1] == "string") {
+      iteratee = args.pop()
+    } else {
+      iteratee = rubick1.identity
+    } 
+    iteratee = rubick1.iteratee(iteratee)
+    return [].concat(...args).reduce(function(result,item,idx,array){
+      return array.some((value,index) => {return iteratee(value) == iteratee(item) && idx != index}) || result.push(item),result},[])
+  },
+
+  xorWith: function(...args) {
+    var comparator = args.pop()
+    return [].concat(...args).reduce(function(result,item,idx,array){
+      return array.some((value,index) => {return comparator(value,item) && idx != index}) || result.push(item),result},[])
   },
 
   zip: function(...arrays) {
-    var length = arrays[0].length
-    var result = []
-    for (let i = 0;i < length;i++) {
-      var subArray =[]
-      for (let j = 0;j < arrays.length;j++) {
-        subArray.push(arrays[j][i])
-      }
-      result.push(subArray)
-    }
-    return result
+    // var length = arrays[0].length
+    // var result = []
+    // for (let i = 0;i < length;i++) {
+    //   var subArray =[]
+    //   for (let j = 0;j < arrays.length;j++) {
+    //     subArray.push(arrays[j][i])
+    //   }
+    //   result.push(subArray)
+    // }
+    // return result
+    return arrays[0].map((item,idx) => arrays.reduce((result,array) =>(result.push(array[idx]),result),[]))
   },
 
   zipObject: function(props,values) {
@@ -616,6 +642,47 @@ var rubick1 = {
       result[item] = values[i]
       return result
     },{})
+  },
+
+  zipObjectDeep: function(props,values) {
+    var result = {}
+    for(let i = 0;i < props.length;i++) {
+      var list = props[i].split(".")
+      var temp = result
+      for(let j = 0;j <list.length;j++) {
+        if(j == list.length - 1) {
+          if(list[j].length == 1) {
+            temp[list[j]] = values[i]
+            
+          } else{
+            if(!temp[list[j][0]]) {
+              temp[list[j][0]] = []           
+            }
+            temp[list[j][0]][list[j].slice(2,3)] = values[i]        
+          }
+          break
+        }
+        
+        if(list[j].length == 1) {
+          if(!temp[list[j]]) {
+            temp[list[j]] = {}
+          } 
+          temp = temp[list[j]]                
+        }else {
+          if(!temp[list[j][0]]) {
+            temp[list[j][0]] = []
+          } 
+          temp = temp[list[j][0]]
+          if(!temp[list[j].slice(2,3)]) {
+            temp[list[j].slice(2,3)] = {}
+          } 
+          temp = temp[list[j].slice(2,3)]   
+        }
+
+
+      }
+    }
+    return result
   },
 
   map: function(array,mapper) {
