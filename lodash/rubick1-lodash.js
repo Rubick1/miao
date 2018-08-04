@@ -36,6 +36,7 @@ var rubick1 = {
     return result
   },
 
+
   difference: function(array,...arrays) {
     var compareArray = [].concat(...arrays)
     return array.reduce((result,item) => {
@@ -708,24 +709,59 @@ var rubick1 = {
     })
     return result
   },
-
+  
+  //所有的高阶函数都需要考虑collection是为对象还是数组
+  //区别在于对象的idx是属性名可以直接使用Object.entries(collection)[i][0]
+  //而数组的idx是数字,forEach,every,map,filter,some,前面五个已koreduce都需要考虑
   every: function(collection,iteratee = rubick1.identity) {
     iteratee = rubick1.iteratee(iteratee)
+    var originalCollection = collection
     collection = Object.entries(collection)
+    var flag = false
+    if(rubick1.isArray(collection)) {
+      flag = true
+    }
     for(let i = 0;i < collection.length;i++) {
-      if(!iteratee(collection[i][1],collection[i][0])) {
+      var idx = flag? Number(collection[i][0]) : collection[i][0]
+      if(!iteratee(collection[i][1],idx,originalCollection)) {
         return false
       }
     }
     return true
   },
 
+  some: function(collection,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var originalCollection = collection
+    collection = Object.entries(collection)
+    var flag = false
+    if(rubick1.isArray(collection)) {
+      flag = true
+    }
+    for(let i = 0;i < collection.length;i++) {
+      var idx = flag? Number(collection[i][0]) : collection[i][0]
+      if(iteratee(collection[i][1],idx,originalCollection)) {
+        return true
+      }
+    }
+    return false
+  },
+
   map: function(collection,mapper = rubick1.identity) {
     mapper = rubick1.iteratee(mapper)
     var result = []
+    var flag = false
+    if(rubick1.isArray(collection)) {
+      flag = true
+    }
+    var originalCollection = collection
     collection = Object.entries(collection)
     for(let i = 0;i < collection.length;i++) {
-      result.push(mapper(collection[i][1],collection[i][0]))
+      if(flag){
+        result.push(mapper(collection[i][1],Number(collection[i][0]),originalCollection))
+      } else {
+        result.push(mapper(collection[i][1],collection[i][0],originalCollection))
+      }
     }
     return result
   },
@@ -733,23 +769,160 @@ var rubick1 = {
   filter: function(collection,test) {
     test = rubick1.iteratee(test)
     var result = []
+    var originalCollection = collection
     collection = Object.entries(collection)
+    var flag = false
+    if(rubick1.isArray(collection)) {
+      flag = true
+    }
     for(let i = 0;i < collection.length;i++) {
-      if(test(collection[i][1])) {
+      var idx = flag? Number(collection[i][0]) : collection[i][0]
+      if(test(collection[i][1],idx,originalCollection)) {
         result.push(collection[i][1])
       }
     }
     return result
   },
 
-  forEach: function(collection,action) {
-    action = rubick1.iteratee(action)
+  find: function(collection,predicate = rubick1.identity,fromIndex = 0) {
     collection = Object.entries(collection)
-    for(let i = 0; i < collection.length;i++) {
-      action(collection[i][1],collection[i][0])
+    predicate = rubick1.iteratee(predicate)
+    for(let i = fromIndex;i < collection.length;i++) {
+      if(predicate(collection[i][1],collection[i][0])) {
+        return collection[i][1]
+      }
     }
+    return undefined 
+  },
+
+  findLast: function(collection,predicate = rubick1.identity,fromIndex) {
+    collection = Object.entries(collection)
+    predicate = rubick1.iteratee(predicate)
+    fromIndex = fromIndex || collection.length - 1
+    for(let i = fromIndex;i >= 0;i--) {
+      if(predicate(collection[i][1],collection[i][0])) {
+        return collection[i][1]
+      }
+    }
+    return undefined
+  },
+
+  flatMap: function(collection,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var result = []
+    rubick1.forEach(collection,x => result.push(iteratee(x)))
+    return rubick1.flatten(result)   
+  },
+
+  flatMapDeep: function(collection,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var result = []
+    rubick1.forEach(collection,x => result.push(iteratee(x)))
+    return rubick1.flattenDeep(result)   
+  },
+
+  flatMapDepth: function(collection,iteratee = rubick1.identity,depth = 1) {
+    iteratee = rubick1.iteratee(iteratee)
+    var result = []
+    rubick1.forEach(collection,x => result.push(iteratee(x)))
+    return rubick1.flattenDepth(result,depth)   
   },
   
+
+  forEach: function(collection,action) {
+    action = rubick1.iteratee(action)
+    var flag = false
+    if(rubick1.isArray(collection)) {
+      flag = true
+    }
+    var originalCollection = collection
+    collection = Object.entries(collection)
+    for(let i = 0; i < collection.length;i++) {
+      if(flag) {
+        action(collection[i][1],Number(collection[i][0]),originalCollection)
+      } else {
+        action(collection[i][1],collection[i][0],originalCollection)
+      }
+    }
+    return originalCollection
+  },
+
+  forEachRight: function(collection,action) {
+    action = rubick1.iteratee(action)
+    var originalCollection = collection
+    collection = Object.entries(collection)
+    for(let i = collection.length - 1; i >= 0;i--) {
+      action(collection[i][1],collection[i][0],originalCollection)
+    }
+    return originalCollection
+  },
+
+  groupBy: function(collection,iteratee = rubick1.iteratee) {
+    iteratee = rubick1.iteratee(iteratee)
+    collection = Object.entries(collection)
+    var result = {}
+    for(let i = 0;i < collection.length;i++) {
+      value = iteratee(collection[i][1])
+      if(value in result) {
+        result[value].push(collection[i][1])
+      } else{
+        result[value] = [collection[i][1]]
+      }
+    }
+    return result
+  },
+
+  includes: function(collection,value,fromIndex = 0) {
+    //三种情况,value为字符串、null、其他值
+    if(typeof value == "string") {
+      var length = value.length
+      var firstChar = value[0]
+      for(let i = 0;i < collection.length - length + 1;i++) {
+        if(collection.slice(i,i+length) === value) {
+          return true
+        }
+      }
+      return false
+    } else {
+      collection = Object.entries(collection)
+      if(value != value) {
+        for(let i = fromIndex; i < collection.length;i++) {
+          if(collection[i][1] != collection[i][1]) {
+            return true
+          } 
+        }
+        return false
+      } else {
+        for(let i = fromIndex; i < collection.length;i++) {
+          if(collection[i][1] == value) {
+            return true
+          } 
+        }
+        return false
+      }
+    }
+  },
+
+  invokeMap: function(collection,path,...args) {
+    if(typeof path == "string") {
+      //如果是字符串就先取出这个函数
+      path = collection[0][path]
+    }
+    return collection.map(item => path.call(item,...args))
+  },
+  
+  //keyBy和groupBy的区别在于keyBy只返回一组里面的最后一个值
+  keyBy: function(collection,iteratee = rubick1.iteratee) {
+    iteratee = rubick1.iteratee(iteratee)
+    collection = Object.entries(collection)
+    var result = {}
+    for(let i = 0;i < collection.length;i++) {
+      value = iteratee(collection[i][1])
+      result[value] = [collection[i][1]]
+    }
+    return result
+  },
+ 
   slice: function(array,start,end) {
     start = start || 0
     end = end || array.length
