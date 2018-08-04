@@ -662,7 +662,7 @@ var rubick1 = {
           }
           break
         }
-        
+
         if(list[j].length == 1) {
           if(!temp[list[j]]) {
             temp[list[j]] = {}
@@ -685,33 +685,69 @@ var rubick1 = {
     return result
   },
 
-  map: function(array,mapper) {
-    mapper = rubick1.iteratee(mapper)
-    return array.reduce(function(result,item){
-      result.push(mapper(item))
-      return result
-    },[])
+  zipWith: function(...args) {
+    var iteratee = args.pop()
+    return args[0].map(function(_,idx){
+      return iteratee(...args.reduce(function(result,item){
+        result.push(item[idx])
+        return result
+      },[]))
+    })
   },
 
-  filter: function(array,test) {
-    test = rubick1.iteratee(test)
-    return array.reduce(function(result,item){
-      if (typeof test == "function") {
-        if (test(item)) {
-          result.push(item)
-        }       
+  countBy: function(collection,iteratee = rubick1.identity) {
+    var result = {}
+    iteratee = rubick1.iteratee(iteratee)
+    collection.forEach(function(item){
+      var value = iteratee(item)
+      if(value in result) {
+        result[value]++
       } else {
-        if (item.test) {
-          result.push(item)
-        }
+        result[value] = 1
       }
-      return result      
-    },[])
+    })
+    return result
   },
 
-  forEach: function(array,action) {
+  every: function(collection,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    collection = Object.entries(collection)
+    for(let i = 0;i < collection.length;i++) {
+      if(!iteratee(collection[i][1],collection[i][0])) {
+        return false
+      }
+    }
+    return true
+  },
+
+  map: function(collection,mapper = rubick1.identity) {
+    mapper = rubick1.iteratee(mapper)
+    var result = []
+    collection = Object.entries(collection)
+    for(let i = 0;i < collection.length;i++) {
+      result.push(mapper(collection[i][1],collection[i][0]))
+    }
+    return result
+  },
+
+  filter: function(collection,test) {
+    test = rubick1.iteratee(test)
+    var result = []
+    collection = Object.entries(collection)
+    for(let i = 0;i < collection.length;i++) {
+      if(test(collection[i][1])) {
+        result.push(collection[i][1])
+      }
+    }
+    return result
+  },
+
+  forEach: function(collection,action) {
     action = rubick1.iteratee(action)
-    return array.reduce((result,item,i,array) => {action(item,i,array)},[])
+    collection = Object.entries(collection)
+    for(let i = 0; i < collection.length;i++) {
+      action(collection[i][1],collection[i][0])
+    }
   },
   
   slice: function(array,start,end) {
