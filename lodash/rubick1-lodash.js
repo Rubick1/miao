@@ -1091,7 +1091,7 @@ var rubick1 = {
   isArrayLike: value => !(value instanceof Function) && (value.length != null) &&
   value.length >= 0 && value.length <= Number.MAX_SAFE_INTEGER,
  
-  isArrayLikeObject: value => value instanceof Object && isArrayLike(value),
+  isArrayLikeObject: value => value instanceof Object && rubick1.isArrayLike(value),
 
   isBoolean: value => {return {}.toString.call(value) == "[object Boolean]"},
 
@@ -1113,6 +1113,7 @@ var rubick1 = {
   },
   
   //isEqualWith有点没看懂需求？If customizer returns undefined, comparisons are handled by the method instead.看不懂这句话
+  //isMatchWith 跟这个类似，到时候再一起写
   isEqualWith: function(value,other,customizer) {
     if (value != value && other != other) {
       return true
@@ -1142,7 +1143,7 @@ var rubick1 = {
 
   isFunction: value => Object.prototype.toString.call(value) == "[object Function]",
 
-  isInteger: value =>  ruibick1.isFinite(value) && Math.floor(value) == value, 
+  isInteger: value =>  rubick1.isFinite(value) && Math.floor(value) == value, 
   
   isLength: value => rubick1.isInteger(value),
 
