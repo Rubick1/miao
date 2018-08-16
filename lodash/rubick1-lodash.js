@@ -715,12 +715,12 @@ var rubick1 = {
   //而数组的idx是数字,forEach,every,map,filter,some,前面五个已koreduce都需要考虑
   every: function(collection,iteratee = rubick1.identity) {
     iteratee = rubick1.iteratee(iteratee)
-    var originalCollection = collection
-    collection = Object.entries(collection)
     var flag = false
     if(rubick1.isArray(collection)) {
       flag = true
     }
+    var originalCollection = collection
+    collection = Object.entries(collection)   
     for(let i = 0;i < collection.length;i++) {
       var idx = flag? Number(collection[i][0]) : collection[i][0]
       if(!iteratee(collection[i][1],idx,originalCollection)) {
@@ -732,12 +732,12 @@ var rubick1 = {
 
   some: function(collection,iteratee = rubick1.identity) {
     iteratee = rubick1.iteratee(iteratee)
-    var originalCollection = collection
-    collection = Object.entries(collection)
     var flag = false
     if(rubick1.isArray(collection)) {
       flag = true
     }
+    var originalCollection = collection
+    collection = Object.entries(collection)   
     for(let i = 0;i < collection.length;i++) {
       var idx = flag? Number(collection[i][0]) : collection[i][0]
       if(iteratee(collection[i][1],idx,originalCollection)) {
@@ -768,13 +768,14 @@ var rubick1 = {
 
   filter: function(collection,test) {
     test = rubick1.iteratee(test)
-    var result = []
-    var originalCollection = collection
-    collection = Object.entries(collection)
     var flag = false
     if(rubick1.isArray(collection)) {
       flag = true
     }
+    var result = []
+    var originalCollection = collection
+    collection = Object.entries(collection)
+    
     for(let i = 0;i < collection.length;i++) {
       var idx = flag? Number(collection[i][0]) : collection[i][0]
       if(test(collection[i][1],idx,originalCollection)) {
@@ -918,11 +919,312 @@ var rubick1 = {
     var result = {}
     for(let i = 0;i < collection.length;i++) {
       value = iteratee(collection[i][1])
-      result[value] = [collection[i][1]]
+      result[value] = collection[i][1]
     }
     return result
   },
+  
+  //先排后面的，再排前面的,前面的权重大
+  //orderBy和sortBy的区别在于orderBy可以指定每次排序是升序还是降序，sortBy只能升序ascending order
+  orderBy: function(collection,iteratee = [rubick1.identity],orders =[]){
+    //交换collection中两个下标的属性值
+    function swap(collection,i,j) {
+      var temp = collection[i]
+      collection[i] = collection[j]
+      collection[j] = temp 
+    }
+    var newCollection = Object.entries(collection)
+    var iters = iteratee.map(x => rubick1.iteratee(x))
+    for(let i = iters.length - 1;i >= 0;i--) {
+      var iter = iters[i]
+      //冒泡需要两层循环！！
+      for(let j = newCollection.length - 1;j >= 0;j--) {
+        for (let k = 0; k < j;k++) {
+          if(orders[i] == "desc") {
+            if(iter(newCollection[k][1]) < iter(newCollection[k+1][1])) {
+              swap(newCollection,k,k+1)
+            } 
+          } else {
+            if(iter(newCollection[k][1]) > iter(newCollection[k+1][1])) {
+              swap(newCollection,k,k+1)
+            }
+          }
+        }
+        
+      }
+    }
+    return newCollection.reduce(function(result,item){
+      result.push(item[1])
+      return result
+    },[])
+  },
+
+  partition: function(collection,predicate = rubick1.identity) {
+    predicate = rubick1.iteratee(predicate)
+    var result = [[],[]]
+    collection.forEach(item => predicate(item)? result[0].push(item) : result[1].push(item))
+    return result
+  },
+
+  reduce: function(collection,iteratee = rubick1.identity,accumulator) {
+    iteratee = rubick1.iteratee(iteratee)
+    var flag = false,i = 0
+    if(rubick1.isArray(collection)) {
+      flag = true
+    }
+    originalCollection = collection
+    collection = Object.entries(collection)
+    if(accumulator == undefined) {
+      accumulator = collection[i][1]
+      i++
+    }
+
+    for(;i < collection.length;i++) {
+      if(flag) {
+        accumulator = iteratee(accumulator,collection[i][1],Number(collection[i][0]),originalCollection)
+      } else {
+        accumulator = iteratee(accumulator,collection[i][1],collection[i][0],originalCollection)
+      }     
+    }
+    return accumulator
+  },
+
+  reduceRight: function(collection,iteratee = rubick1.identity,accumulator) {
+    iteratee = rubick1.iteratee(iteratee)
+    var flag = false
+    if(rubick1.isArray(collection)) {
+      flag = true
+    }
+    originalCollection = collection
+    collection = Object.entries(collection)
+    var i = collection.length - 1
+    if(accumulator == undefined) {
+      accumulator = collection[i][1]
+      i--
+    }
+    for(;i >= 0;i--) {
+      if(flag) {
+        accumulator = iteratee(accumulator,collection[i][1],Number(collection[i][0]),originalCollection)
+      } else {
+        accumulator = iteratee(accumulator,collection[i][1],collection[i][0],originalCollection)
+      }     
+    }
+    return accumulator
+  },
+
+  reject: function(collection,predicate = rubick1.identity) {
+    predicate = rubick1.iteratee(predicate)
+    var result = []
+    collection.forEach(function(item,idx,collection){
+      if(!predicate(item,idx,collection)) {
+        result.push(item)
+      }
+    })
+    return result
+  },
+
+  sample: function(collection) {
+    collection = Object.entries(collection)
+    return collection[Math.floor(Math.random() * collection.length)][1]
+  },
+
+  sampleSize: function(collection,num = 1) {
+    return rubick1.shuffle(collection).slice(0,num)
+  },
+
+  shuffle: function(collection) {
+    var result = []
+    collection = Object.entries(collection)
+    var rangeNumber = collection.length
+    var length = collection.length
+    for(let i = 0;i < length;i++) {
+      var idx = Math.floor(Math.random()* rangeNumber)
+      result.unshift(collection[idx][1])
+      collection.splice(idx,1)
+      rangeNumber--
+    }
+    return result
+  },
+
+  size: function(collection) {
+    collection = Object.entries(collection) 
+    return collection.length
+  },
+
+  sortBy: function(collection,iteratee = [rubick1.identity]){
+    return rubick1.orderBy(collection,iteratee)
+  },
+
+  defer: function(func,...args){
+    //这个好像需要一个使程序暂停的函数？
+    return setTimeout(func,1000,...args)
+  },
+
+
+  delay: function(func,wait,...args) {
+  
+  },
+
+  castArray: function(value) {
+    if(arguments.length == 0) {
+      return []
+    }
+    return rubick1.isArray(value)? value : [value]
+  },
+
+  conformsTo: function(object,source) {
+    return rubick1.every(source,(item,idx)=>item(object[idx]))
+  },
+
+  eq: function(value,other) {
+    return (value != value) && (other != other) ? true : value === other 
+  },
+
+  gt: (value,other) => value > other,
+
+  gte: (value,other) => value >= other,
+
+  isArguments: value => typeof value.callee == "function",
+
+  isArrayBuffer: value => value instanceof ArrayBuffer,
+
+  isArrayLike: value => !(value instanceof Function) && (value.length != null) &&
+  value.length >= 0 && value.length <= Number.MAX_SAFE_INTEGER,
  
+  isArrayLikeObject: value => value instanceof Object && isArrayLike(value),
+
+  isBoolean: value => {return {}.toString.call(value) == "[object Boolean]"},
+
+  isDate: value => {return {}.toString.call(value) == "[object Date]"},
+
+  isElement: value => {return {}.toString.call(value) == "[object Element]"},
+
+  isEmpty: function(value) {
+    if(value == null) {
+      return true
+    }
+    if(value.length != null || value.size != null) {
+      return value.length == 0 || value.size == 0
+    } else if(typeof value == "object"){
+      return Object.keys(value).length == 0
+    } else {
+      return true
+    }
+  },
+  
+  //isEqualWith有点没看懂需求？If customizer returns undefined, comparisons are handled by the method instead.看不懂这句话
+  isEqualWith: function(value,other,customizer) {
+    if (value != value && other != other) {
+      return true
+    }
+    if (typeof value == "object" && typeof other == "object") {
+      var valueKeys = Object.keys(value)
+      var otherKeys = Object.keys(other)
+      if (valueKeys.length != otherKeys.length) {
+        return false
+      }
+      for (var prop in value) {
+        if (rubick1.isEqualWith(value[prop],other[prop],customizer)) {
+          continue
+        } else {
+          return false
+        }
+      }
+      return true
+    }
+
+    return customizer(value,other)
+  },
+
+  isError: value => Object.prototype.toString.call(value) == "[object Error]",
+  
+  isFinite: value => typeof value == "number" && isFinite(value),
+
+  isFunction: value => Object.prototype.toString.call(value) == "[object Function]",
+
+  isInteger: value =>  ruibick1.isFinite(value) && Math.floor(value) == value, 
+  
+  isLength: value => rubick1.isInteger(value),
+
+  isMap: value => Object.prototype.toString.call(value) == "[object Map]",
+
+  isMatch: function(object,source){
+    for (var prop of Object.keys(source)) {
+      if (!rubick1.isEqual(source[prop],object[prop])) {
+        return false
+      }
+    }
+    return true
+  },
+  //全局里面的isFinite、isNaN都是自动把参数转为数字类型以后再判断
+  isNaN: value => typeof value == "number" && value != value,
+
+  isNil: value => value == null,
+
+  isNull: value => value === null,
+
+  isNumber: value => Object.prototype.toString.call(value) == "[object Number]",
+  
+  //isObject 和 isObjectLike的区别在哪啊
+  isObject: value => value instanceof Object,
+
+  isObjectLike: value => typeof value == "object" && value != null,
+
+  isPlainObject: value => value.constructor == Object || Object.getPrototypeOf(value) == null,
+
+  isRegExp: value => Object.prototype.toString.call(value) == "[object RegExp]",
+
+  isSafeInteger: value => rubick1.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER,
+
+  isSet: value => Object.prototype.toString.call(value) == "[object Set]",
+
+  isString: value => Object.prototype.toString.call(value) == "[object String]",
+
+  isSymbol: value => Object.prototype.toString.call(value) == "[object Symbol]",
+
+  isUndefined: value => value === undefined,
+
+  isWeakMap: value => Object.prototype.toString.call(value) == "[object WeakMap]",
+
+  isWeakSet: value => Object.prototype.toString.call(value) == "[object WeakSet]",
+
+  lt: (value,other) => value < other,
+
+  lte: (value,other) => value <= other,
+
+  toArray: (value) => {
+    if(!value) {
+      return []
+    }
+    var entries = Object.entries(value)
+    var result = []
+    entries.forEach(item => result.push(item[1]))
+    return result
+  },
+
+  toFinite: (value) => {
+    var num = Number(value)
+    if(num != num) {
+      return 0
+    }
+    if(Math.abs(num) > 1.7976931348623157e+308) {
+      return num > 0 ? 1.7976931348623157e+308 : -1.7976931348623157e+308
+    }
+    if(Math.abs(num) < 5e-324) {
+      return num > 0 ? 5e-324 : -5e-324
+    }
+    return num
+  },
+
+  toInteger: (value) => rubick1.toFinite(value) | 0,
+
+  toNumber: (value) => Number(value),
+
+  assign: function(object,...sources) {
+    sources.forEach(obj => Object.keys(obj).forEach(key => object[key] = obj[key]))
+    return object
+  },
+
   slice: function(array,start,end) {
     start = start || 0
     end = end || array.length
@@ -1027,8 +1329,6 @@ var rubick1 = {
 
   //等会再写几个判断是否是字符串\数组、对象的函数，iteratee就可以跑起来了
   isArray: value => value instanceof Array,
-
-  isObject: value => value instanceof Object,
 
   add: (a,b) => a + b,
   
