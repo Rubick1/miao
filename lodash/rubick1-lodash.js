@@ -1217,13 +1217,132 @@ var rubick1 = {
     return num
   },
 
-  toInteger: (value) => rubick1.toFinite(value) | 0,
-
+  toInteger: (value) => {
+    if(Number(value) != Number(value)) {
+      return 0
+    }
+    if(Number(value) >= 0) {
+      return Number(value)
+    }
+    if(Number(value) < 0) {
+      return - Number(value)
+    }
+  },
+  //当数字为很大的值时候，| 0运算会失效.. 需要针对它修改一下
   toNumber: (value) => Number(value),
 
   assign: function(object,...sources) {
     sources.forEach(obj => Object.keys(obj).forEach(key => object[key] = obj[key]))
     return object
+  },
+
+  toSafeInteger: function(value) {
+    var num = rubick1.toInteger(value)
+    if(Math.abs(num) > 9007199254740991) {
+        return num > 0? 9007199254740991 : - 9007199254740991
+    }
+    return num
+  },
+
+  add: (a,b) => a + b,
+
+  ceil: function(number,precision = 0) {
+    return Math.ceil(number * 10 ** precision) / 10 ** precision
+  },
+
+  divide: (dividend,divisor) => dividend / divisor,
+
+  floor: (number,precision = 0) => Math.floor(number * 10 ** precision) / 10 ** precision,
+
+  max: function(array) {
+    var result = -Infinity
+    array.forEach(function(item){
+      if(item > result) {
+        result = item
+      }
+    })
+    return result == -Infinity ? undefined : result
+  },
+
+  maxBy: function(array,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var result = undefined
+    var max = -Infinity
+    array.forEach(function(item){
+      if(iteratee(item) > max) {
+        result = item
+        max = iteratee(item)
+      }
+    })
+    return result
+  },
+
+  mean: array => array.reduce((result,item,idx)=> (result * idx + item) / (idx + 1)),
+
+  meanBy: function(array,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var sum = 0
+    array.forEach(item => sum += iteratee(item))
+    return sum == 0 ? 0 : sum / array.length 
+  },
+
+  min: function(array){
+    var result = Infinity
+    array.forEach(item => item < result && result == item)
+    return result == Infinity ? undefined : result
+  },
+
+  minBy: function(array,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var result = undefined
+    var min = Infinity
+    array.forEach(function(item){
+      if(iteratee(item) < min) {
+        min = iteratee(item)
+        result = item
+      }
+    })
+    return result
+  },
+
+  multiply: (multiplier,multiplicand) => multiplier * multiplicand,
+
+  round: (number,precision = 0) => Math.round(number * 10 ** precision) / 10 ** precision,
+
+  subtract: (minuend, subtrahend) => minuend - subtrahend,
+
+  sum: array => array.reduce((result,item) => result + item),
+
+  sumBy: function(array,iteratee = rubick1.identity){
+    iteratee = rubick1.iteratee(iteratee)
+    var sum  = 0
+    array.forEach(item => sum += iteratee(item))
+    return sum
+  },
+
+  clamp: function(number,lower,upper) {
+    if(number < lower) {
+      return lower
+    } else if(number > upper){
+      return upper
+    } else{
+      return number
+    }
+  },
+
+  inRange: function(number,end,start = 0) {
+    if(start > end) {
+      return number >= start && number < end
+    } else {
+      return number >= end && number < start
+    }
+  },
+  
+  //这个没写完 有很多情况要分类讨论。。比如两个参数的时候还要判断参数类型
+  random: function(...args) {
+    if(args.length == 1) {
+      return Number.isInteger(args[0]) ? Math.floor(Math.random() * args[0]) : Math.random() * args[0]
+    }
   },
 
   slice: function(array,start,end) {
@@ -1331,7 +1450,19 @@ var rubick1 = {
   //等会再写几个判断是否是字符串\数组、对象的函数，iteratee就可以跑起来了
   isArray: value => value instanceof Array,
 
-  add: (a,b) => a + b,
+  forOwn: function(object,iteratee = rubick1.identity){
+    iteratee = rubick1.iteratee(iteratee)
+    for(var key in object) {
+      if(object.hasOwnProperty(key)){
+        var result = iteratee(object[key],key,object)
+      }
+      if(result === false) {
+        break
+      }
+    }
+  },
+
+  
   
 
 
