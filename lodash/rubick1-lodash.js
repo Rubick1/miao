@@ -1345,6 +1345,245 @@ var rubick1 = {
     }
   },
 
+  assignIn: function(object,...sources){
+    sources.forEach(function(obj){
+      for(var key in obj) {
+        object[key] = obj[key]
+      }
+    })
+    return object
+  },
+
+  at: (object,paths) => paths.map(path => rubick1.get(object,path)),
+  
+  defaults: function(object,...sources) {
+    sources.forEach(function(obj){
+      for(var key in obj) {
+        if(!(key in object)){
+          object[key] = obj[key]
+        }
+      }
+    })
+    return object
+  },
+
+  defaultsDeep: function(object,...sources) {
+    sources.forEach(function(obj){
+      for(var key in obj) {
+        if(!(key in object)) {
+          object[key] = obj[key]
+        } else if(typeof obj[key] == "object") {
+          rubick1.defaults(object[key],obj[key])
+        }
+      }
+    })
+    return object
+  },
+
+  findKey: function(object,predicate = rubick1.identity) {
+    predicate = rubick1.iteratee(predicate)
+    var keys = Object.keys(object)
+    for(let i = 0;i < keys.length;i++) {
+      if(predicate(object[key]) === true) {
+        return key
+      }
+    }
+    return undefined
+  },
+
+  findLastKey: function(object,predicate = rubick1.identity) {
+    predicate = rubick1.iteratee(predicate)
+    var keys = Object.keys(object)
+    for(let i = keys.length - 1;i >= 0;i--) {
+      if(predicate(object[key]) === true) {
+        return key
+      }
+    }
+    return undefined
+  },
+
+  forIn: function(object,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    for(var key in object) {
+      if(iteratee(object[key],key,object) === false) {
+        break
+      }
+    }
+    return object
+  },
+
+  forInRight: function(object,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var keys = []
+    for(var key in object) {
+      keys.unshift(key)
+    }
+    for(let i = 0;i < keys.length;i++) {
+      var key = keys[i]
+      if(iteratee(object[key],key,object) === false) {
+        break
+      }
+    }
+    return object
+  },
+
+  forOwn: function(object,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var keys = Object.keys(object)
+    for(let i = 0;i < keys.length;i++) {
+      var key = keys[i]
+      if(iteratee(object[key],key,object) === false) {
+        break
+      }
+    }
+    return object
+  },
+
+  forOwnRight: function(object,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var keys = Object.keys(object)
+    for(let i = keys.length - 1;i >= 0;i--) {
+      var key = keys[i]
+      if(iteratee(object[key],key,object) === false) {
+        break
+      }
+    }
+    return object
+  },
+
+  functions: function(object) {
+    var keys = Object.keys(object)
+    var result = []
+    keys.forEach(key => {
+      if (typeof object[key] == "function") {
+        result.push(key)
+      }
+    })
+    return result
+  },
+
+  functionsIn: function(object) {
+    var result = []
+    for(var key in object) {
+      if (typeof object[key] == "function") {
+        result.push(key)
+      }
+    }
+    return result
+  },
+
+  get: function(object,path,defaultValue) {
+    var result = object
+    if (typeof path == "string") {
+      path = path.split(/\[|\]|\./).filter(str => str.length > 0)
+    }
+    for(let i = 0;i < path.length;i++) {
+      if(!result) {
+        return defaultValue
+      }
+      result = result[path[i]]
+    }
+    return result
+  },
+
+  has: function(object,path) {
+    if (typeof path == "string") {
+      path = path.split(/\[|\]|\./).filter(str => str.length > 0)
+    }
+    if(object.hasOwnProperty(path[0])) {
+      return rubick1.hasIn(object,path)
+    } else {
+      return false
+    }
+  },
+
+  hasIn: (object,path) => rubick1.get(object,path,undefined) != undefined,
+
+  invert: function(object){
+    var result = {}
+    var keys = Object.keys(object)
+    keys.forEach(key => result[object[key]] = key)
+    return result
+  },  
+
+  invertBy: function(object,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var result = {}
+    var keys = Object.keys(object)
+    var value
+    keys.forEach(function(key){
+      value = iteratee(object[key])
+      if(value in result) {
+        result[value].push(key)
+      } else {
+        result[value] = [key]
+      }
+    })
+    return result
+  },
+
+  invoke: function(object,path,...args) {
+    if (typeof path == "string") {
+      path = path.split(/\[|\]|\./).filter(str => str.length > 0)
+    }
+    var func = path.pop()
+    return rubick1.get(object,path)[func](...args)
+  },
+
+  keys: function(object) {
+    var result = []
+    for(var key in object) {
+      if(object.hasOwnProperty(key)){
+        result.push(key)
+      }
+    }
+    return result
+  },
+
+  keysIn: function(object) {
+    var result = []
+    for(var key in object) {
+        result.push(key)
+    }
+    return result
+  },
+
+  mapKeys: function(object,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var result = {}
+    var keys = rubick1.keys(object)
+    keys.forEach(key => result[iteratee(key)] = object[key])
+    return result
+  },
+
+  mapValues: function(object,iteratee = rubick1.identity) {
+    iteratee = rubick1.iteratee(iteratee)
+    var result = {}
+    var keys = rubick1.keys(object)
+    keys.forEach(key => result[key] = iteratee(object[key]))
+    return result
+  },
+
+  merge: function(object,...sources) {
+    sources.forEach(obj => {
+      for(var key in obj) {
+        if(key in object) {
+          if(typeof object[key] != "object") {
+            object[key] = obj[key]
+          } else {
+            rubick1.merge(object[key],obj[key])
+          }
+        } else {
+          object[key] = obj[key]
+        }
+      }
+    })
+    return object
+  },
+
+  
+
+  
   slice: function(array,start,end) {
     start = start || 0
     end = end || array.length
@@ -1450,17 +1689,17 @@ var rubick1 = {
   //等会再写几个判断是否是字符串\数组、对象的函数，iteratee就可以跑起来了
   isArray: value => value instanceof Array,
 
-  forOwn: function(object,iteratee = rubick1.identity){
-    iteratee = rubick1.iteratee(iteratee)
-    for(var key in object) {
-      if(object.hasOwnProperty(key)){
-        var result = iteratee(object[key],key,object)
-      }
-      if(result === false) {
-        break
-      }
-    }
-  },
+  // forOwn: function(object,iteratee = rubick1.identity){
+  //   iteratee = rubick1.iteratee(iteratee)
+  //   for(var key in object) {
+  //     if(object.hasOwnProperty(key)){
+  //       var result = iteratee(object[key],key,object)
+  //     }
+  //     if(result === false) {
+  //       break
+  //     }
+  //   }
+  // },
 
   
   
