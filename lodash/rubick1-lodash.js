@@ -1581,7 +1581,87 @@ var rubick1 = {
     return object
   },
 
-  
+  omit: function(object,paths) {
+    var result = rubick1.assign({},object)
+    paths.forEach(path => {
+      path = rubick1.toPath(path)
+      var prop = path.pop()
+      var obj = rubick1.get(result,path)
+      delete obj[prop]
+    })
+    return result
+  },
+
+  omitBy: function(object,predicate = rubick1.identity) {
+    predicate = rubick1.iteratee(predicate)
+    var result = {}
+    for(var key in object) {
+      if(!predicate(object[key],key)) {
+        result[key] = object[key]
+      }
+    }
+    return result
+  },
+
+  pick: function(object,paths) {
+    var result = {}
+    paths.forEach(path =>{
+      var origiPath = path
+      path = rubick1.toPath(path)
+      var key = path.pop()
+      var obj = result
+      path.forEach(prop =>{
+        obj[prop] = {}
+        obj = obj[prop]
+      })
+      obj[key] = rubick1.get(object,origiPath)
+    })
+    return result
+  },
+
+  pickBy: function(object,predicate = rubick1.identity) {
+    predicate = rubick1.iteratee(predicate)
+    var result = {}
+    for(var key in object) {
+      if(predicate(object[key],key)) {
+        result[key] = object[key]
+      }
+    }
+    return result
+  },
+
+  result: function(object,path,defaValue) {
+    var result = rubick1.get(object,path,defaValue)
+    if(typeof result == "function") {
+      path = rubick1.toPath(path)
+      path.pop()
+      var obj = rubick1.get(object,path,defaValue)
+      result = result.call(obj)
+    }
+    return result
+  },
+   
+  set: function(object,path,value){
+    path = rubick1.toPath(path)
+    var obj = object
+    for(let i = 0;i < path.length;i++) {
+      if(i == path.length - 1) {
+        obj[path[i]] = value
+        break
+      }
+      if(!obj[path[i]]){
+        //判断下一个是数字还是字母
+        if(path[i+1].charCodeAt() >= 48 && path[i+1].charCodeAt() <= 57) {
+          obj[path[i]] = []
+        } else {
+          obj[path[i]] = {}
+        }
+
+      } 
+      obj = obj[path[i]]
+    }
+    return object
+  },
 
   
   slice: function(array,start,end) {
@@ -1700,7 +1780,12 @@ var rubick1 = {
   //     }
   //   }
   // },
-
+  toPath: function(value){
+    if (typeof value == "string") {
+      value = value.split(/\[|\]|\./).filter(str => str.length > 0)
+    }
+    return value
+  },
   
   
 
